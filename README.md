@@ -1,4 +1,6 @@
 # invasion
 Multiplayer DCS server
 
-Prueba GIT
+Servidor Hispano de DCS.
+
+Multiobjetivos e interactivo.
