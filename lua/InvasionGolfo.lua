@@ -43,6 +43,12 @@ function INV_mensaje(_tipo, _texto, _forHelis)
     end
 end
 
+function tablelength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+  end
+
 function checkAlive(_groupName)
     local _group = Group.getByName(_groupName)
     for j, _unit in pairs(_group:getUnits()) do
@@ -211,7 +217,7 @@ function missionExtra0_fail()
 end
 -- MISSION 7
 function checkMission6()
-    INV_mensaje(2, "Destruido Crucero Moskva en Tunb Island.\n\nObjetivo realizado, buen trabajo!!!")
+    INV_mensaje(2, "Destruido Crucero Moskva en Bandar e-lengeh.\n\nObjetivo realizado, buen trabajo!!!")
     missionCommands.removeItemForCoalition(coalition.side.BLUE, {"OBJETIVO 6 - CG 1164 MOSKVA"})
 end
 --
@@ -224,94 +230,6 @@ end
 --
 --
 function INVASION_RadioMenuSetup()
-    -- ////SetUp Menu
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 1 - BASE SAQR PORT",
-        nil,
-        function()
-            local _msg
-            local grp = Group.getByName("DEFENSA_IRAN_SAQR_PORT")
-            _msg = "OBJETIVO 1 - BASE SAQR PORT\n\nEnemigos activos restantes : " .. table.getn(grp:getUnits())
-            INV_mensaje(1, _msg)
-        end,
-        nil
-    )
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 2 - QUIMICA AL LIMAH",
-        nil,
-        function()
-            local _msg
-            local _unitsLife = trigger.misc.getUserFlag(2002)
-            -- for i = 1, 5 do
-            --     local _nameOBJ = "OBJ2." .. i
-            --     env.info(_nameOBJ)
-            --     local static_object = Unit.getByName(_nameOBJ)
-            --     local health = static_object:getLife()-- Return an integer
-            -- -- local _object = Object.getByName("OBJ2.".. i)
-            -- -- if Unit.getByName("OBJ2.".. i):getLife() < 1 then _unitsLife = _unitsLife -1 end
-            -- end
-            _msg = "OBJETIVO 2 - QUIMICA AL LIMAH\n\nBASE QUIMICA ACTIVA : " .. _unitsLife .. " de 5"
-            INV_mensaje(1, _msg)
-        end,
-        nil
-    )
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 3 - BUQUE NUCLEAR",
-        nil,
-        function()
-            INV_mensaje(
-                1,
-                "OBJETIVO 3 - BUQUE NUCLEAR\n\nBuque Nuclear en camino a Al Jari - [D010] desde Shib Derab [CQ95]"
-            )
-        end,
-        nil
-    )
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 4 - LIMIPEZA DE KHASAB",
-        nil,
-        function()
-            local _grp1 = Group.getByName("Defensa Aerea Khasab Aeropuerto")
-            local _msg2 =
-                "OBJETIVO 4 - LIMIPEZA DE KHASAB\n\n- Enemigos en zona Aeropuerto " ..
-                table.getn(_grp1:getUnits()) .. " de " .. _grp1:getInitialSize() .. "\n"
-            local _grp2 = Group.getByName("Defensa Aerea Khasab Puerto")
-            local _msg3 =
-                "- Enemigos en zona Puerto " .. table.getn(_grp2:getUnits()) .. " de " .. _grp2:getInitialSize() .. "\n"
-            INV_mensaje(1, _msg2 .. _msg3)
-        end,
-        nil
-    )
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 5 - PUESTO DE MANDO",
-        nil,
-        function()
-            local _grp1 = StaticObject.getByName("OBJ5_1")
-            local _msg = "OBJETIVO 5 - CENTRO DE MANDO AVANZADO\n\n"
-            if (_grp1 ~= nil) then
-                _msg = _msg .. "Objetivo pendiente de eliminación."
-            end
-            INV_mensaje(1, _msg)
-        end,
-        nil
-    )
-    missionCommands.addCommandForCoalition(
-        coalition.side.BLUE,
-        "OBJETIVO 6 - CG 1164 MOSKVA",
-        nil,
-        function()
-            local _msg = "OBJETIVO 6 - CG 1164 MOSKVA\n\n"
-            _msg = _msg .. "Crucero Moskva en Tunb Island, eliminación pendiente."
-            -- trigger.action.explosion(Unit.getByName("OBJ7_barco"):getPosition().p, 1000)
-            INV_mensaje(1, _msg)
-        end,
-        nil
-    )
-
     subMenuModosActivar = missionCommands.addSubMenuForCoalition(coalition.side.BLUE, "ACTIVAR MISIONES->")
     missionCommands.addCommandForCoalition(
         coalition.side.BLUE,
@@ -338,7 +256,6 @@ function INVASION_RadioMenuSetup()
         end,
         nil
     )
-
     subMenuModos = missionCommands.addSubMenuForCoalition(coalition.side.BLUE, "MODOS EXTRAS->")
     menuCAPextra =
         missionCommands.addCommandForCoalition(
@@ -406,6 +323,5 @@ trigger.action.setUserFlag(10, 0)
 -- MOOSE SETTINGS
 _SETTINGS:SetPlayerMenuOff()
 -- initFunciones()
-INVASION_RadioMenuSetup()
 -- timer.scheduleFunction(checkCAP, 53, timer.getTime() + 10)
 -- timer.scheduleFunction(golfoRutinas, 53, timer.getTime() + 10)
