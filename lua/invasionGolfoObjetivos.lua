@@ -77,7 +77,7 @@ function unidadesActivas(_tipo, _objetivo)
     local _unidadesTotales = 0
     if (_tipo == "grupo") then
         local _group = Group.getByName(_objetivo)
-        _unidadesActivas = table.getn(_group:getUnits())
+        _unidadesActivas = checkAliveNumber(_objetivo)
         _unidadesTotales = _group:getInitialSize()
     elseif (_tipo == "unidad") then
         for j, _unitName in ipairs(_objetivo) do
@@ -149,7 +149,12 @@ missionCommands.addCommandForCoalition(
     "EXPLOSION",
     nil,
     function()
-        trigger.action.explosion(Unit.getByName("ObjNuclear"):getPosition().p, 500)
+        trigger.action.explosion(Unit.getByName("Unidad #142"):getPosition().p, 1000)
+        trigger.action.explosion(Unit.getByName("Unidad #116"):getPosition().p, 1000)
+        trigger.action.explosion(Unit.getByName("Unidad #112"):getPosition().p, 1000)
+        trigger.action.explosion(Unit.getByName("Unidad #126"):getPosition().p, 1000)
+        trigger.action.explosion(Unit.getByName("Unidad #137"):getPosition().p, 1000)
+        trigger.action.explosion(Unit.getByName("Unidad #136"):getPosition().p, 1000)
     end,
     nil
 )

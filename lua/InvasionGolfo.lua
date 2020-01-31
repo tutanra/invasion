@@ -45,9 +45,11 @@ end
 
 function tablelength(T)
     local count = 0
-    for _ in pairs(T) do count = count + 1 end
+    for _ in pairs(T) do
+        count = count + 1
+    end
     return count
-  end
+end
 
 function checkAlive(_groupName)
     local _group = Group.getByName(_groupName)
@@ -59,16 +61,32 @@ function checkAlive(_groupName)
     return nil
 end
 
+function checkAliveNumber(_groupName)
+    local _group = Group.getByName(_groupName)
+    local _totali = Group.getInitialSize(_group)
+    local i = 0
+    for j, _unit in pairs(_group:getUnits()) do
+        if _unit ~= nil then
+            if (_unit:getLife() > 1) then
+                i = i + 1
+            end
+        end
+    end
+    return i
+end
+
 function checkAlivePercent(_groupName)
     local _group = Group.getByName(_groupName)
     local _totali = Group.getInitialSize(_group)
     local i = 0
     for j, _unit in pairs(_group:getUnits()) do
         if _unit ~= nil then
-            i = 1
+            if (_unit:getLife() > 1) then
+                i = i + 1
+            end
         end
     end
-    return ((_totali - i) / _totali) * 100
+    return (i / _totali) * 100
 end
 
 -- BUSQUEDA VALOR EN TABLA
@@ -209,10 +227,7 @@ function missionExtra0_exito()
     trigger.action.setUserFlag(10, 1)
 end
 function missionExtra0_fail()
-    INV_mensaje(
-        2,
-        "Support 1 derribado.\n\nMisión finalizada sin exito"
-    )
+    INV_mensaje(2, "Support 1 derribado.\n\nMisión finalizada sin exito")
     trigger.action.setUserFlag(10, 2)
 end
 -- MISSION 7
@@ -264,7 +279,11 @@ function INVASION_RadioMenuSetup()
         subMenuModos,
         function()
             local Khasab_base = ZONE_AIRBASE:New(AIRBASE.PersianGulf.Khasab, 10000)
-            CAPDispatcher:SetSquadron("Kish_CAP", AIRBASE.PersianGulf.Kish_International_Airport, {"KISH_SU30", "KISH_F14"})
+            CAPDispatcher:SetSquadron(
+                "Kish_CAP",
+                AIRBASE.PersianGulf.Kish_International_Airport,
+                {"KISH_SU30", "KISH_F14"}
+            )
             CAPDispatcher:SetSquadronTakeoffInAir("Kish_CAP")
             CAPDispatcher:SetSquadronGci("Kish_CAP", 900, 1200)
             CAPDispatcher:SetSquadronOverhead("Kish_CAP", 2)
