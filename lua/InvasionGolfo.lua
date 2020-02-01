@@ -7,7 +7,7 @@ function INV_mensaje(_tipo, _texto, _forHelis, _titulo, _groupID)
     -- 1 TIPO MISION STATUS
     -- 2 TIPO ALERTA
     -- 3 TIPO PANICO
-    -- 4 MISSION CUMPLIDA
+    -- 4 STARTUP
     local _msg = ""
     local _snd = ""
     local _dst = ""
@@ -23,12 +23,14 @@ function INV_mensaje(_tipo, _texto, _forHelis, _titulo, _groupID)
     elseif (_tipo == 3) then
         _snd = "sirena.ogg"
         _msg = "\nSERVICIO DE INTELIGENCIA\n-----------------------------------------\n\n"
+    elseif (_tipo == 4) then
+        _snd = "startup.ogg"
     else
         _snd = "Morse.ogg"
         _msg = "\n"
     end
     if (_titulo ~= false) then
-        _msg = "\n" .. _titulo .. "\n------------------------------------------------------------------------\n\n"
+        _msg = "\n" .. _titulo .. "\n----------------------------------------------------------------------------\n\n"
     end
     if (_forHelis == false and _groupID == false) then
         _dst = coalition.side.BLUE
@@ -381,17 +383,7 @@ function golfoRutinas(timeloop, time)
     return time + 5
 end
 
---[[ _barcoOBJ7 = UNIT:FindByName("OBJ7_barco")
-_barcoOBJ7:HandleEvent(EVENTS.Dead)
-function _barcoOBJ7:OnEventDead(event)
-    -- MISSION 7
-    INV_mensaje(2, "Destruido Crucero Moskva en Tunb Island.\n\nObjetivo realizado, buen trabajo!!!")
-    missionCommands.removeItemForCoalition(coalition.side.BLUE, {"OBJETIVO 7 - CG 1164 MOSKVA"})
-end ]]
 -- MISION 6 sin hacer
 trigger.action.setUserFlag(10, 0)
 -- MOOSE SETTINGS
 _SETTINGS:SetPlayerMenuOff()
--- initFunciones()
--- timer.scheduleFunction(checkCAP, 53, timer.getTime() + 10)
--- timer.scheduleFunction(golfoRutinas, 53, timer.getTime() + 10)

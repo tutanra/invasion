@@ -10,6 +10,7 @@ function INV_mensaje(_tipo, _texto, _forHelis)
     -- 2 TIPO ALERTA
     -- 3 TIPO PANICO
     -- 4 MISSION CUMPLIDA
+    -- 5 STARTUP
     local _msg = ""
     local _snd = ""
     local _dst = ""
@@ -23,9 +24,12 @@ function INV_mensaje(_tipo, _texto, _forHelis)
     elseif (_tipo == 3) then
         _snd = "sirena.ogg"
         _msg = "\nSERVICIO DE INTELIGENCIA\n-----------------------------------------\n\n"
-    else
+        elseif (_tipo == 4) then
         _snd = "Morse.ogg"
         _msg = "\n"
+    elseif (_tipo == 5) then
+        _snd = "sirena.ogg"
+        _msg = "\nSERVICIO DE INTELIGENCIA\n-----------------------------------------\n\n"
     end
 
     if (_forHelis == false) then

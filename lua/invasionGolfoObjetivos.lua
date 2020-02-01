@@ -139,6 +139,26 @@ function inicioObjetivos()
         Dinamico = true,
         Trigger = "REFOBJ8"
     }
+    invasion_AG[12] = {
+        NombreObjetivo = "PUESTO DE CARRETERA",
+        Unidades = "BlueMASH #009",
+        UnidadesTipo = "grupo",
+        Porcentaje = 80,
+        TextoObjetivo = "6 BLINDADOS, FORTIFICACIÓN.",
+        Completado = "Destruido Puesto de Carretera.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true,
+    }
+    invasion_AG[13] = {
+        NombreObjetivo = "AAA EN SAQR PORT",
+        Unidades = "DefensaOBJ1Shilka",
+        UnidadesTipo = "grupo",
+        Porcentaje = 100,
+        TextoObjetivo = "4 SHILKA.",
+        Completado = "Destruido AAA en Saqr Port.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true,
+    }
 end
 
 function unidadesActivas(_tipo, _objetivo)
@@ -391,7 +411,7 @@ function eventHandler:onEvent(_eventDCS)
     if _eventDCS == nil or _eventDCS.initiator == nil then
         return true
     end
-    if (_eventDCS.id == 8) then
+    if (_eventDCS.id == world.event.S_EVENT_DEAD) then
         -- MUERTE
         local _categoria = Object.getCategory(_eventDCS.initiator)
         if (_categoria == 3 or _categoria == 1) then
@@ -409,7 +429,7 @@ function eventHandler:onEvent(_eventDCS)
             timer.scheduleFunction(
                 function()
                     INV_mensaje(
-                        1,
+                        4,
                         _msg,
                         false,
                         "Bienvenido " .. _plrName .. " - Grupo " .. Group.getName(Unit.getGroup(_eventDCS.initiator)),
@@ -421,6 +441,7 @@ function eventHandler:onEvent(_eventDCS)
             )
         end
     end
+    return true
 end
 
 world.addEventHandler(eventHandler)
