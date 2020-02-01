@@ -77,42 +77,67 @@ function inicioObjetivos()
         Realizado = false,
         Dinamico = false
     }
-    invasion_AG[6] = {
+    invasion_AG[06] = {
         NombreObjetivo = "CASERNA DE MONTAÑA",
         Unidades = "OBJDIN1",
         UnidadesTipo = "estatico",
         Porcentaje = 100,
         TextoObjetivo = "ELIMINA ESTRUCTURA MILITAR.",
         Completado = "Destruido Caserna de montaña.\n\nObjetivo dinámico realizado, buen trabajo!!!",
-        ZonaBusqueda = "[26'04'16N - 56'12'13E]",
-        VerEstado = false,
         Realizado = false,
         Dinamico = true
     }
 
-    invasion_AG[7] = {
+    invasion_AG[07] = {
         NombreObjetivo = "FUERZA OCUPACIÓN",
         Unidades = "OBJDIN2",
         UnidadesTipo = "grupo",
         Porcentaje = 100,
         TextoObjetivo = "2 BLINDADOS Y 2 FORTIFICACIONES.",
         Completado = "Destruido Fuerza de Ocupación.\n\nObjetivo dinámico realizado, buen trabajo!!!",
-        ZonaBusqueda = "[26'04'25N - 56'13'00E]",
-        VerEstado = false,
         Realizado = false,
         Dinamico = true
     }
-    invasion_AG[8] = {
+    invasion_AG[08] = {
         NombreObjetivo = "FUERZA OCUPACIÓN VILLA",
         Unidades = "OBJDIN2 #001",
         UnidadesTipo = "grupo",
         Porcentaje = 100,
         TextoObjetivo = "4 BLINDADOS E INFANTERIA.",
         Completado = "Destruido Fuerza de Ocupación en VILLA.\n\nObjetivo dinámico realizado, buen trabajo!!!",
-        ZonaBusqueda = "[26'05'38N - 56'13'37E]",
-        VerEstado = false,
         Realizado = false,
         Dinamico = true
+    }
+    invasion_AG[09] = {
+        NombreObjetivo = "PUERTO DIBBA AL-HISN",
+        Unidades = "OBJDINADIBBA",
+        UnidadesTipo = "grupo",
+        Porcentaje = 100,
+        TextoObjetivo = "5 BLINDADOS EN ZONA PUERTO.",
+        Completado = "Destruido Fuerza de Ocupación en Puerto.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true
+    }
+    invasion_AG[10] = {
+        NombreObjetivo = "PASO MONTAÑOSO",
+        Unidades = "OBJDINAM8",
+        UnidadesTipo = "grupo",
+        Porcentaje = 80,
+        TextoObjetivo = "1 BLINDADO, INFANTERIA, MANPADS.",
+        Completado = "Destruido Fuerza de paso montañosa.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true
+    }
+    invasion_AG[11] = {
+        NombreObjetivo = "CONTROL MONTAÑOSO",
+        Unidades = "OBJDINAM8 #001",
+        UnidadesTipo = "grupo",
+        Porcentaje = 100,
+        TextoObjetivo = "1 BLINDADO, INFANTERIA, AAA.",
+        Completado = "Destruido Fuerza de control, toma de fuerzas aliadas hacía objetivo.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true,
+        Trigger = "REFOBJ8"
     }
 end
 
@@ -164,7 +189,7 @@ function misionesDinamicas(_groupID)
                 _msg ..
                 "[" ..
                     getCordenadas(_menu.Unidades, _menu.UnidadesTipo) ..
-                        "] (" .. j ..") ".. _menu.NombreObjetivo .. " - " .. _menu.TextoObjetivo
+                        "] (" .. j .. ") " .. _menu.NombreObjetivo .. " - " .. _menu.TextoObjetivo
             i = i + 1
         end
     end
@@ -234,20 +259,16 @@ missionCommands.addCommandForCoalition(
     "DESARROLLO",
     subMenuModos,
     function()
-        trigger.action.explosion(Unit.getByName("Unidad #170"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #369"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #103"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #169"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #018"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #014"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #013"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #010"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #016"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #005"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #006"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #009"):getPosition().p, 2000)
-        trigger.action.explosion(StaticObject.getByName("OBJDIN1"):getPosition().p, 500)
-        trigger.action.explosion(StaticObject.getByName("OBJ2 #005"):getPosition().p, 500)
-        trigger.action.explosion(StaticObject.getByName("OBJ2 #001"):getPosition().p, 500)
+        trigger.action.explosion(Unit.getByName("Unidad #374"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #370"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #371"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #372"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #373"):getPosition().p, 2000)
     end,
     subMenuModos
 )
@@ -292,13 +313,13 @@ end
 
 local function missionComplete(_objetivo)
     if (type(_objetivo.Unidades) == "string") then
-        -- env.info("Evento : " .. _objetivo.Unidades)
+        env.info("Evento : " .. _objetivo.Unidades)
         return missionCompleteUnit(_objetivo.UnidadesTipo, _objetivo.Unidades, _objetivo.Porcentaje)
     else
         local _itemComplete = 0
         local _totalItems = 0
         for j, _unitName in ipairs(_objetivo.Unidades) do
-            -- env.info("Evento array : " .. _unitName)
+            env.info("Evento array : " .. _unitName)
             if (_objetivo.UnidadesTipo == "grupo") then
                 if (missionCompleteUnit(_objetivo.UnidadesTipo, _unitName, _objetivo.Porcentaje) == false) then
                     return false
@@ -338,6 +359,11 @@ local function checkMissionComplete(_category)
                     INV_mensaje(2, _menu.Completado)
                     if (_menu.Dinamico == false) then
                         missionCommands.removeItemForCoalition(coalition.side.BLUE, {_nombreMision})
+                    else
+                        trigger.action.removeMark(j)
+                        if (_menu.Trigger ~= nil) then
+                            continueGroup(_menu.Trigger)
+                        end
                     end
                 end
             elseif (_category == 1 and _menu.UnidadesTipo ~= "estatico") then
@@ -348,6 +374,11 @@ local function checkMissionComplete(_category)
                     INV_mensaje(2, _menu.Completado)
                     if (_menu.Dinamico == false) then
                         missionCommands.removeItemForCoalition(coalition.side.BLUE, {_nombreMision})
+                    else
+                        trigger.action.removeMark(j)
+                        if (_menu.Trigger ~= nil) then
+                            continueGroup(_menu.Trigger)
+                        end
                     end
                 end
             end

@@ -30,17 +30,14 @@ function INV_mensaje(_tipo, _texto, _forHelis, _titulo, _groupID)
     if (_titulo ~= false) then
         _msg = "\n" .. _titulo .. "\n------------------------------------------------------------------------\n\n"
     end
-    env.info("Grupo mensaje " .. _groupID)
     if (_forHelis == false and _groupID == false) then
         _dst = coalition.side.BLUE
         trigger.action.outTextForCoalition(_dst, _msg .. _texto .. "\n", 10, true)
         trigger.action.outSoundForCoalition(_dst, _snd)
     elseif (_groupID ~= false) then
-        env.info("Envio por grupo")
         trigger.action.outTextForGroup(_groupID, _msg .. _texto .. "\n", 10, true)
         trigger.action.outSoundForGroup(_groupID, _snd)
     else
-        env.info("Inicio de Helis")
         for i, _group in pairs(coalition.getGroups(coalition.side.BLUE, Group.Category.HELICOPTER)) do
             if _group ~= nil then
                 local _groupHELI = Group.getID(_group)
@@ -89,7 +86,7 @@ function checkAlivePercent(_groupName)
     local i = 0
     for j, _unit in pairs(_group:getUnits()) do
         if _unit ~= nil then
-            if (_unit:getLife() >= 1) then
+            if (_unit:getLife() > 1) then
                 i = i + 1
             end
         end
