@@ -122,6 +122,20 @@ function WPrandom(_grupoNombre, _numMAX)
     trigger.action.pushAITask(_group, wpRandom)
 end
 
+local function getCordenadasVec3(_unidad, _tipo)
+    if (_tipo == "grupo") then
+        local pos = checkAlive(_unidad)
+        return Unit.getPosition(pos).p
+    elseif (_tipo == "unidad") then
+        local pos = Unit.getByName(_unidad)
+        return Unit.getPosition(pos).p
+    elseif (_tipo == "estatico") then
+        local pos = StaticObject.getByName(_unidad)
+        return StaticObject.getPosition(pos).p
+    end
+    return nil
+end
+
 local function getCordenadasUnit(_unidad, _tipo)
     local lat, lon
     if (_tipo == "grupo") then
@@ -137,19 +151,23 @@ local function getCordenadasUnit(_unidad, _tipo)
     return (UTILS.tostringLL(lat, lon, 0, true))
 end
 
-function getCordenadas(_unidad, _tipo)
-    _tipo = _tipo or "unidad"
+function getUnitFromMission(_unidad)
     if type(_unidad) == "string" then
-        env.info( "Unidad : ".._unidad .. " coordenada " .. getCordenadasUnit(_unidad, _tipo))
-        return getCordenadasUnit(_unidad, _tipo)
+        return _unidad
     else
-        for j, _unitName in ipairs(_unidad.Unidades) do
-            env.info( "Unidad : ".._unitName .. " coordenada " .. getCordenadasUnit(_unitName, _tipo))
-            return getCordenadasUnit(_unitName, _tipo)
+        for _, _unitName in pairs(_unidad) do
+            return _unitName
         end
     end
 end
 
+function getVec3FromMission(_unidad, _tipo)
+    return getCordenadasVec3(getUnitFromMission(_unidad), _tipo)
+end
+
+function getCordenadas(_unidad, _tipo)
+    return getCordenadasUnit(getUnitFromMission(_unidad), _tipo)
+end
 --
 --
 --

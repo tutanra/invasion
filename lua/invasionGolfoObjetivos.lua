@@ -154,21 +154,24 @@ end
 function misionesDinamicas(_groupID)
     local i = 0
     local _msg = ""
+    env.info("Accion de grupo")
     for j, _menu in pairs(invasion_AG) do
         if (_menu.Dinamico == true and _menu.Realizado == false) then
             if (i > 0) then
                 _msg = _msg .. "\n\n"
             end
-            _msg = _msg .. _menu.NombreObjetivo .. " - " .. _menu.TextoObjetivo
-            _msg = _msg .. "\n" .. getCordenadas(_menu.Unidades, _menu.UnidadesTipo)
-            _msg = _msg .. "\n____________________________________________________________________________________"
+            _msg =
+                _msg ..
+                "[" ..
+                    getCordenadas(_menu.Unidades, _menu.UnidadesTipo) ..
+                        "] (" .. j ..") ".. _menu.NombreObjetivo .. " - " .. _menu.TextoObjetivo
             i = i + 1
         end
-        if (i == 0) then
-            INV_mensaje(1, "", false, "NO HAY MISIONES DINAMICAS ACTIVAS", _groupID)
-        else
-            INV_mensaje(1, _msg, false, "MISIONES DINAMICAS", _groupID)
-        end
+    end
+    if (i == 0) then
+        INV_mensaje(1, "", false, "NO HAY MISIONES DINAMICAS ACTIVAS", _groupID)
+    else
+        INV_mensaje(1, _msg, false, "MISIONES DINAMICAS", _groupID)
     end
 end
 
@@ -202,6 +205,14 @@ function inicioMenu()
                     INV_mensaje(1, _msg)
                 end,
                 nil
+            )
+        else
+            trigger.action.markToCoalition(
+                j,
+                _menu.NombreObjetivo .. "\n" .. _menu.TextoObjetivo,
+                getVec3FromMission(_menu.Unidades, _menu.UnidadesTipo),
+                coalition.side.BLUE,
+                true
             )
         end
     end
@@ -355,8 +366,7 @@ function eventHandler:onEvent(_eventDCS)
         if (_categoria == 3 or _categoria == 1) then
             checkMissionComplete(_categoria)
         end
-    end
-    if (_eventDCS.id == world.event.S_EVENT_BIRTH) then
+    elseif (_eventDCS.id == world.event.S_EVENT_BIRTH) then
         local _plrName = Unit.getPlayerName(_eventDCS.initiator)
         if _plrName ~= nil then
             local _groupID = Group.getID(Unit.getGroup(_eventDCS.initiator))
