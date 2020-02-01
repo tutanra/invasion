@@ -3,7 +3,7 @@
 env.info("----Inicio de funciones personalizadas 1.1----")
 -- /// INICIO DE MISION
 
-function INV_mensaje(_tipo, _texto, _forHelis)
+function INV_mensaje(_tipo, _texto, _forHelis, _titulo, _groupID)
     -- 1 TIPO MISION STATUS
     -- 2 TIPO ALERTA
     -- 3 TIPO PANICO
@@ -12,6 +12,8 @@ function INV_mensaje(_tipo, _texto, _forHelis)
     local _snd = ""
     local _dst = ""
     _forHelis = _forHelis or false
+    _titulo = _titulo or false
+    _groupID = _groupID or false
     if (_tipo == 1) then
         _snd = "beep.ogg"
         _msg = "\nINFORMACIÓN DE MISIÓN\n---------------------------------------\n\n"
@@ -25,19 +27,25 @@ function INV_mensaje(_tipo, _texto, _forHelis)
         _snd = "Morse.ogg"
         _msg = "\n"
     end
-
-    if (_forHelis == false) then
+    if (_titulo ~= false) then
+        _msg = "\n" .. _titulo .. "\n------------------------------------------------------------------------\n\n"
+    end
+    env.info("Grupo mensaje " .. _groupID)
+    if (_forHelis == false and _groupID == false) then
         _dst = coalition.side.BLUE
         trigger.action.outTextForCoalition(_dst, _msg .. _texto .. "\n", 10, true)
         trigger.action.outSoundForCoalition(_dst, _snd)
+    elseif (_groupID ~= false) then
+        env.info("Envio por grupo")
+        trigger.action.outTextForGroup(_groupID, _msg .. _texto .. "\n", 10, true)
+        trigger.action.outSoundForGroup(_groupID, _snd)
     else
         env.info("Inicio de Helis")
         for i, _group in pairs(coalition.getGroups(coalition.side.BLUE, Group.Category.HELICOPTER)) do
-            env.info(i)
             if _group ~= nil then
-                local _groupID = Group.getID(_group)
-                trigger.action.outSoundForGroup(_groupID, _snd)
-                trigger.action.outTextForGroup(_groupID, _msg .. _texto .. "\n", 10, true)
+                local _groupHELI = Group.getID(_group)
+                trigger.action.outSoundForGroup(_groupHELI, _snd)
+                trigger.action.outTextForGroup(_groupHELI, _msg .. _texto .. "\n", 10, true)
             end
         end
     end
@@ -67,7 +75,7 @@ function checkAliveNumber(_groupName)
     local i = 0
     for j, _unit in pairs(_group:getUnits()) do
         if _unit ~= nil then
-            if (_unit:getLife() > 1) then
+            if (_unit:getLife() >= 1) then
                 i = i + 1
             end
         end
@@ -81,12 +89,12 @@ function checkAlivePercent(_groupName)
     local i = 0
     for j, _unit in pairs(_group:getUnits()) do
         if _unit ~= nil then
-            if (_unit:getLife() > 1) then
+            if (_unit:getLife() >= 1) then
                 i = i + 1
             end
         end
     end
-    return (i / _totali) * 100
+    return ((i / _totali) * 100)
 end
 
 -- BUSQUEDA VALOR EN TABLA
@@ -112,6 +120,34 @@ function WPrandom(_grupoNombre, _numMAX)
     end
     wpRandom = math.random(_numMAX)
     trigger.action.pushAITask(_group, wpRandom)
+end
+
+local function getCordenadasUnit(_unidad, _tipo)
+    local lat, lon
+    if (_tipo == "grupo") then
+        local pos = checkAlive(_unidad)
+        lat, lon = coord.LOtoLL(Unit.getPosition(pos).p)
+    elseif (_tipo == "unidad") then
+        local pos = Unit.getByName(_unidad)
+        lat, lon = coord.LOtoLL(Unit.getPosition(pos).p)
+    elseif (_tipo == "estatico") then
+        local pos = StaticObject.getByName(_unidad)
+        lat, lon = coord.LOtoLL(StaticObject.getPosition(pos).p)
+    end
+    return (UTILS.tostringLL(lat, lon, 0, true))
+end
+
+function getCordenadas(_unidad, _tipo)
+    _tipo = _tipo or "unidad"
+    if type(_unidad) == "string" then
+        env.info( "Unidad : ".._unidad .. " coordenada " .. getCordenadasUnit(_unidad, _tipo))
+        return getCordenadasUnit(_unidad, _tipo)
+    else
+        for j, _unitName in ipairs(_unidad.Unidades) do
+            env.info( "Unidad : ".._unitName .. " coordenada " .. getCordenadasUnit(_unitName, _tipo))
+            return getCordenadasUnit(_unitName, _tipo)
+        end
+    end
 end
 
 --
