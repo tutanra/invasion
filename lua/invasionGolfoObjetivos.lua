@@ -147,7 +147,7 @@ function inicioObjetivos()
         TextoObjetivo = "6 BLINDADOS, FORTIFICACIÓN.",
         Completado = "Destruido Puesto de Carretera.\n\nObjetivo dinámico realizado, buen trabajo!!!",
         Realizado = false,
-        Dinamico = true,
+        Dinamico = true
     }
     invasion_AG[13] = {
         NombreObjetivo = "AAA EN SAQR PORT",
@@ -157,8 +157,43 @@ function inicioObjetivos()
         TextoObjetivo = "4 SHILKA.",
         Completado = "Destruido AAA en Saqr Port.\n\nObjetivo dinámico realizado, buen trabajo!!!",
         Realizado = false,
-        Dinamico = true,
+        Dinamico = true
     }
+    invasion_AG[14] = {
+        NombreObjetivo = "DEFENSA AL LIMAH OESTE",
+        Unidades = "DEFENSA AEREA AL LIMAH #002",
+        UnidadesTipo = "grupo",
+        Porcentaje = 100,
+        TextoObjetivo = "BLINDADOS + SA6",
+        Completado = "Destruido Defensa AL LIMAH OESTE.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+        Realizado = false,
+        Dinamico = true
+    }
+end
+
+function insertarMision(_txt1, _units, _type, _percent, _txt3, _complete, _trigger)
+    local _numArray = tablelength(invasion_AG) + 1
+    _trigger = _trigger or false
+    invasion_AG[_numArray] = {
+        NombreObjetivo = _txt1,
+        Unidades = _units,
+        UnidadesTipo = _type,
+        Porcentaje = _percent,
+        TextoObjetivo = _txt3,
+        Completado = _complete,
+        Realizado = false,
+        Dinamico = true
+    }
+    if (_trigger ~= false) then
+        invasion_AG[_numArray].Trigger = _trigger
+    end
+    trigger.action.markToCoalition(
+        _numArray,
+        _txt1 .. "\n" .. _txt3,
+        getVec3FromMission(_units, _type),
+        coalition.side.BLUE,
+        true
+    )
 end
 
 function unidadesActivas(_tipo, _objetivo)
