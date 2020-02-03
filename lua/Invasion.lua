@@ -434,9 +434,14 @@ local function missionComplete(_objetivo)
         local _itemComplete = 0
         local _totalItems = 0
         for j, _unitName in ipairs(_objetivo.Unidades) do
+            if (type(_objetivo.UnidadesTipo) == "string") then
+                _unitTipo = _objetivo.UnidadesTipo
+            else
+                _unitTipo = _objetivo.UnidadesTipo[j]
+            end
             -- env.info("Evento array : " .. _unitName)
             if (_objetivo.UnidadesTipo == "grupo") then
-                if (missionCompleteUnit(_objetivo.UnidadesTipo[j], _unitName, _objetivo.Porcentaje) == false) then
+                if (missionCompleteUnit(_unitTipo, _unitName, _objetivo.Porcentaje) == false) then
                     return false
                 else
                     _itemComplete = _itemComplete + 1
@@ -445,7 +450,7 @@ local function missionComplete(_objetivo)
                 if (_objetivo.UnidadesTipo == "cap") then
                     if
                         (missionCompleteUnit(
-                            _objetivo.UnidadesTipo[j],
+                            _unitTipo,
                             _unitName,
                             _objetivo.Porcentaje,
                             _objetivo.MooseSquadron[j]
@@ -454,7 +459,7 @@ local function missionComplete(_objetivo)
                         _itemComplete = _itemComplete + 1
                     end
                 else
-                    if (missionCompleteUnit(_objetivo.UnidadesTipo[j], _unitName, _objetivo.Porcentaje) == true) then
+                    if (missionCompleteUnit(_unitTipo, _unitName, _objetivo.Porcentaje) == true) then
                         _itemComplete = _itemComplete + 1
                     end
                 end
