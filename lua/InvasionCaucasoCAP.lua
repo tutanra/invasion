@@ -1,9 +1,4 @@
--- script CAP --
--- dofile("lua/InvasionCaucasoCAP.lua")
--- script CAP --
---dofile(lfs.currentdir().."\\lua\\InvasionCaucasoCAP.lua")
---dofile(lfs.writedir()..[[lua\InvasionCaucasoCAP.lua]])
-
+-- CAP CAUCASO --
 local DTgeneral = SET_GROUP:New()
 DTgeneral:FilterPrefixes({"BS EWR", "RS AWACS"})
 DTgeneral:FilterStart()
@@ -49,7 +44,7 @@ RA1ADispatcher:SetSquadronTakeoffFromParkingCold("Batumi_defend")
 RA1ADispatcher:SetDefaultGrouping(2)
 RA1ADispatcher:SetDefaultLandingAtRunway()
 RA1ADispatcher:SetBorderZone(Frontroja1)
- -- SUJUMI
+-- SUJUMI
 Sujumi_base = ZONE_AIRBASE:New(AIRBASE.Caucasus.Sukhumi_Babushara, 20000)
 Frontroja2 = ZONE_POLYGON:New("Frontroja2", GROUP:FindByName("BORDER_SUJUMI"))
 RA2ADispatcher:SetSquadron("Sujumi_defend", AIRBASE.Caucasus.Sukhumi_Babushara, "SUJUMI_MISSION_AIR", 14)

@@ -1,275 +1,4 @@
--- Funciones --
--- dofile("lua\\InvasionCaucaso.lua")
-env.info("----Inicio de funciones personalizadas 1.1----")
--- /// INICIO DE MISION
-
-function INV_mensaje(_tipo, _texto, _forHelis, _titulo, _groupID)
-    -- 1 TIPO MISION STATUS
-    -- 2 TIPO ALERTA
-    -- 3 TIPO PANICO
-    -- 4 STARTUP
-    local _msg = ""
-    local _snd = ""
-    local _dst = ""
-    _forHelis = _forHelis or false
-    _titulo = _titulo or false
-    _groupID = _groupID or false
-    if (_tipo == 1) then
-        _snd = "beep.ogg"
-        _msg = "\nINFORMACIÓN DE MISIÓN\n---------------------------------------\n\n"
-    elseif (_tipo == 2) then
-        _snd = "Morse.ogg"
-        _msg = "\nALERTA DE MISIÓN\n-----------------------------------------\n\n"
-    elseif (_tipo == 3) then
-        _snd = "sirena.ogg"
-        _msg = "\nSERVICIO DE INTELIGENCIA\n-----------------------------------------\n\n"
-    elseif (_tipo == 4) then
-        _snd = "startup.ogg"
-    else
-        _snd = "Morse.ogg"
-        _msg = "\n"
-    end
-    if (_titulo ~= false) then
-        _msg = "\n" .. _titulo .. "\n----------------------------------------------------------------------------\n\n"
-    end
-    if (_forHelis == false and _groupID == false) then
-        _dst = coalition.side.BLUE
-        trigger.action.outTextForCoalition(_dst, _msg .. _texto .. "\n", 10, true)
-        trigger.action.outSoundForCoalition(_dst, _snd)
-    elseif (_groupID ~= false) then
-        trigger.action.outTextForGroup(_groupID, _msg .. _texto .. "\n", 10, true)
-        trigger.action.outSoundForGroup(_groupID, _snd)
-    else
-        for i, _group in pairs(coalition.getGroups(coalition.side.BLUE, Group.Category.HELICOPTER)) do
-            if _group ~= nil then
-                local _groupHELI = Group.getID(_group)
-                trigger.action.outSoundForGroup(_groupHELI, _snd)
-                trigger.action.outTextForGroup(_groupHELI, _msg .. _texto .. "\n", 10, true)
-            end
-        end
-    end
-end
-
-function tablelength(T)
-    local count = 0
-    for _ in pairs(T) do
-        count = count + 1
-    end
-    return count
-end
-
-function checkAlive(_groupName)
-    local _group = Group.getByName(_groupName)
-    for j, _unit in pairs(_group:getUnits()) do
-        if _unit ~= nil then
-            return _unit
-        end
-    end
-    return nil
-end
-
-function checkAliveNumber(_groupName)
-    local _group = Group.getByName(_groupName)
-    local _totali = Group.getInitialSize(_group)
-    local i = 0
-    for j, _unit in pairs(_group:getUnits()) do
-        if _unit ~= nil then
-            if (_unit:getLife() >= 1) then
-                i = i + 1
-            end
-        end
-    end
-    return i
-end
-
-function checkAlivePercent(_groupName)
-    local _group = Group.getByName(_groupName)
-    local _totali = Group.getInitialSize(_group)
-    local i = 0
-    for j, _unit in pairs(_group:getUnits()) do
-        if _unit ~= nil then
-            if (_unit:getLife() > 1) then
-                i = i + 1
-            end
-        end
-    end
-    return ((i / _totali) * 100)
-end
-
--- BUSQUEDA VALOR EN TABLA
-local function has_value(tab, val)
-    for index, value in ipairs(tab) do
-        if value[1] == val then
-            return true
-        end
-    end
-    return false
-end
-
--- ACCION DE TAREA IA ELEGIDA EN RANDOM
--- numMAX : Tareas asignadas en la unidad a elegir
-function WPrandom(_grupoNombre, _numMAX)
-    local _group
-    if type(_grupoNombre) == "string" then
-        _group = Group.getByName(_grupoNombre)
-        env.info("Entra random " .. _grupoNombre)
-    else
-        _group = _grupoNombre
-        env.info("Entra random " .. _group:getName())
-    end
-    wpRandom = math.random(_numMAX)
-    trigger.action.pushAITask(_group, wpRandom)
-end
-
-local function getCordenadasVec3(_unidad, _tipo)
-    if (_tipo == "grupo") then
-        local pos = checkAlive(_unidad)
-        return Unit.getPosition(pos).p
-    elseif (_tipo == "unidad") then
-        local pos = Unit.getByName(_unidad)
-        return Unit.getPosition(pos).p
-    elseif (_tipo == "estatico") then
-        local pos = StaticObject.getByName(_unidad)
-        return StaticObject.getPosition(pos).p
-    end
-    return nil
-end
-
-local function getCordenadasUnit(_unidad, _tipo)
-    local lat, lon
-    if (_tipo == "grupo") then
-        local pos = checkAlive(_unidad)
-        lat, lon = coord.LOtoLL(Unit.getPosition(pos).p)
-    elseif (_tipo == "unidad") then
-        local pos = Unit.getByName(_unidad)
-        lat, lon = coord.LOtoLL(Unit.getPosition(pos).p)
-    elseif (_tipo == "estatico") then
-        local pos = StaticObject.getByName(_unidad)
-        lat, lon = coord.LOtoLL(StaticObject.getPosition(pos).p)
-    end
-    return (UTILS.tostringLL(lat, lon, 0, true))
-end
-
-function getUnitFromMission(_unidad)
-    if type(_unidad) == "string" then
-        return _unidad
-    else
-        for _, _unitName in pairs(_unidad) do
-            return _unitName
-        end
-    end
-end
-
-function getVec3FromMission(_unidad, _tipo)
-    return getCordenadasVec3(getUnitFromMission(_unidad), _tipo)
-end
-
-function getCordenadas(_unidad, _tipo)
-    return getCordenadasUnit(getUnitFromMission(_unidad), _tipo)
-end
---
---
---
---                      INICIO FUNCIONES CAP
---
---      Selecciona autómaticamente el inicio de aviones según las variables
---          _CAPminima -> Indica mínimo de aviones activos (En grupos)
---
---
---
--- NUMERO TOTAL DE AVIONES ENEMIGOS EN VUELO O CON TAREAS
-local function totalAirplaneInAir(_tipo)
-    local _totalAirplane = 0
-    -- tipo CAP (Normal,Hardcore,extra)
-    _tipo = _tipo or false
-    for i, _group in pairs(coalition.getGroups(coalition.side.RED, Group.Category.AIRPLANE)) do
-        if _group ~= nil then
-            local _groupName = Group.getName(_group)
-            if
-                (_tipo == false or (_tipo == 1 and has_value(_CAPnormal, _groupName:sub(1, -6))) or
-                    (_tipo == 2 and has_value(_CAPhardcore, _groupName:sub(1, -6))) or
-                    (_tipo == 3 and has_value(_CAPextra, _groupName:sub(1, -6))))
-             then
-                if (_tareas == true) then -- SI TIENE TAREA TAMBIEN SUMA
-                    local _groupcontrl = Group.getController(_group)
-                    if (Controller.hasTask(_groupcontrl) == true) then
-                        _totalAirplane = _totalAirplane + 1
-                    end
-                    for j, _unit in pairs(_group:getUnits()) do
-                        if _unit ~= nil and Unit.inAir(_unit) then
-                            _totalAirplane = _totalAirplane + 1
-                        end
-                    end
-                end
-            end
-        end
-    end
-    env.info("Aviones activos " .. _totalAirplane)
-    return _totalAirplane
-end
-
--- NUMERO TOTAL DE AVIONES ENEMIGOS EN VUELO O CON TAREAS POR GRUPO
-local function totalAirplaneInAirGroup(_groupName)
-    local _totalAirplane = 0
-    local i = 1
-    _group = Group.getByName(_groupName .. "#00" .. i)
-    while (_group ~= nil) do
-        local _groupcontrl = Group.getController(_group)
-        if (Controller.hasTask(_groupcontrl) == true) then
-            for j, _unit in pairs(Group.getUnits(_group)) do
-                if (_unit ~= nil) then
-                    if (Unit.getLife(_unit) > 1.0) then
-                        _totalAirplane = _totalAirplane + 1
-                    end
-                end
-            end
-        end
-        i = i + 1
-        _group = Group.getByName(_groupName .. "#00" .. i)
-    end
-    return _totalAirplane
-end
-
--- NUMERO TOTAL DE AVIONES ENEMIGOS POR GRUPO
-local function totalAirplaneGroup(_groupName)
-    local _totalAirplane = 0
-    local i = 1
-    _group = Group.getByName(_groupName .. "#00" .. i)
-    while (i < 20) do
-        if (_group ~= nil) then
-            for j, _unit in pairs(Group.getUnits(_group)) do
-                if (_unit ~= nil) then
-                    if (Unit.getLife(_unit) > 1.0) then
-                        _totalAirplane = _totalAirplane + 1
-                    end
-                end
-            end
-        end
-        i = i + 1
-        _group = Group.getByName(_groupName .. "#00" .. i)
-    end
-    return _totalAirplane
-end
-
-function continueGroup(_groupName)
-    local _group = Group.getByName(_groupName)
-    if (_group ~= nil) then
-        trigger.action.groupContinueMoving(_group)
-    end
-end
-
--- INICIAR CAP
-function startGroup(_grupoNombre)
-    local _group = Group.getByName(_grupoNombre)
-    if (_group ~= nil) then
-        local _groupcontrl = Group.getController(_group)
-        Controller.setCommand(_groupcontrl, {id = "Start", params = {}})
-    end
-end
-
-function checkCAP(timeloop, time)
-    return time + 10
-end
+-- GOLFO --
 --
 --   MISSION 6
 function missionExtra0_exito()
@@ -292,8 +21,6 @@ end
 --
 --
 --                      INICIO FUNCIONES MISIONES - MENUS
---
---
 --
 --
 --
@@ -377,11 +104,28 @@ function INVASION_RadioMenuSetup()
         end,
         subMenuModos
     )
+    missionCommands.addCommandForCoalition(
+    coalition.side.BLUE,
+    "DESARROLLO",
+    subMenuModos,
+    function()
+        trigger.action.explosion(Unit.getByName("Unidad #369"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #103"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #169"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #018"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #014"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #374"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #370"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #371"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #372"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #373"):getPosition().p, 2000)
+    end,
+    subMenuModos
+)
 end
 
-function golfoRutinas(timeloop, time)
-    return time + 5
-end
+inicioMenu()
+INVASION_RadioMenuSetup()
 
 -- MISION 6 sin hacer
 trigger.action.setUserFlag(10, 0)
