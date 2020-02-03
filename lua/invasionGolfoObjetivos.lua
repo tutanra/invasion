@@ -164,3 +164,13 @@ invasion_AG[14] = {
     Realizado = false,
     Dinamico = true
 }
+invasion_AG[15] = {
+    NombreObjetivo = "SA13 VALLE INTERIOR",
+    Unidades = "SA13MOUNTAIN",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "SA13 + AAA",
+    Completado = "Destruido Defensa SA13 interior.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+    Realizado = false,
+    Dinamico = true
+}

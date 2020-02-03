@@ -109,8 +109,7 @@ function INVASION_RadioMenuSetup()
     "DESARROLLO",
     subMenuModos,
     function()
-        trigger.action.explosion(Unit.getByName("Unidad #369"):getPosition().p, 2000)
-        trigger.action.explosion(Unit.getByName("Unidad #103"):getPosition().p, 2000)
+        trigger.action.explosion(Unit.getByName("Unidad #407"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #169"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #018"):getPosition().p, 2000)
         trigger.action.explosion(Unit.getByName("Unidad #014"):getPosition().p, 2000)
