@@ -17,7 +17,6 @@ trigger.action.setUserFlag(441, 0)
 
 function MissionControl4(timeloop, time)
     local _estadoMision = trigger.misc.getUserFlag(441)
-    env.info(_estadoMision)
     -- OBJETIVO PUESTO 1
     if (_estadoMision == 1) then
         -- SIGUIENTE OBJETIVO PUESTO 3

@@ -12,22 +12,19 @@ invasion_AG[1] = {
 }
 invasion_AG[2] = {
     NombreObjetivo = "AVANZADA GUPTA",
-    Unidades = {"OBJ2 BLINDADOS",
-    {"OBJ2 ABASTECIMIENTO1", "OBJ2 ABASTECIMIENTO2", "OBJ2 ABASTECIMIENTO3", "OBJ2 ABASTECIMIENTO4"},
-    {
-        "OBJ2 HELICOPTEROS #001",
-        "OBJ2 HELICOPTEROS #002",
-        "OBJ2 HELICOPTEROS #003",
-        "OBJ2 HELICOPTEROS #004",
-        "OBJ2 HELICOPTEROS #005"
-    }},
+    Unidades = {
+        "OBJ2 BLINDADOS", {
+            "OBJ2 ABASTECIMIENTO1", "OBJ2 ABASTECIMIENTO2",
+            "OBJ2 ABASTECIMIENTO3", "OBJ2 ABASTECIMIENTO4"
+        }, {
+            "OBJ2 HELICOPTEROS #001", "OBJ2 HELICOPTEROS #002",
+            "OBJ2 HELICOPTEROS #003", "OBJ2 HELICOPTEROS #004",
+            "OBJ2 HELICOPTEROS #005"
+        }
+    },
     UnidadesTipo = {"grupo", "estatico", "estatico"},
     Porcentaje = 100,
-    TextoObjetivo = {
-        "- Blindados ",
-        "- Almacenes ",
-        "- Helicópteros "
-    },
+    TextoObjetivo = {"- Blindados ", "- Almacenes ", "- Helicópteros "},
     Completado = "OBJETIVO 2 - FUERZAS DE LA AVANZADA GUPTA NEUTRALIZADAS.\n\nBuen Trabajo !!!",
     VerEstado = true,
     Realizado = false,
@@ -36,15 +33,12 @@ invasion_AG[2] = {
 
 invasion_AG[3] = {
     NombreObjetivo = "CONVOY",
-    Unidades = {"OBJ3 CONVOY 1","OBJ3 CONVOY 2"},
-    UnidadesTipo = {"grupo","grupo"},
+    Unidades = {"OBJ3 CONVOY 1", "OBJ3 CONVOY 2"},
+    UnidadesTipo = {"grupo", "grupo"},
     Porcentaje = 90,
-    TextoObjetivo = {
-        "- Convoy Alpha ",
-        "- Convoy Bravo "
-    },
+    TextoObjetivo = {"- Convoy Alpha ", "- Convoy Bravo "},
     TextoCumplit = "Elimina el 80% del convoy avistado mediante seguimiento, marcado en Mapa.",
-    Completado = "OBJETIVO 3 - CONVOY NEUTRALIZADO.\n\nBuen Trabajo !!!",
+    Completado = "OBJETIVO 3 - CONVOY NEUTRALIZADO.\nPELIGRO DE INVASIÓN MERMADA\n\nBuen Trabajo !!!",
     VerEstado = true,
     Realizado = false,
     Dinamico = false
@@ -86,4 +80,40 @@ invasion_AG[6] = {
     VerEstado = false,
     Realizado = false,
     Dinamico = false
+}
+
+invasion_AG[7] = {
+    NombreObjetivo = "DEFENSA SA6",
+    Unidades = {"Unidad #071", "Unidad #078"},
+    UnidadesTipo = {"unidad", "unidad"},
+    Porcentaje = 100,
+    TextoObjetivo = "Derribar unidades de búsqueda.",
+    Completado = "RASTREADORES SA6 ELIMINADOS. \n\nBuen trabajo!",
+    VerEstado = false,
+    Realizado = false,
+    Dinamico = true
+}
+
+invasion_AG[8] = {
+    NombreObjetivo = "SHILKA GUFTA BRIDGE",
+    Unidades = "Shilka air defense artillery",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "3 Shilka en el puente.",
+    Completado = "DERRIBADAS AAA EN EL PUENTE DE GUFTA. \n\nBuen trabajo!",
+    VerEstado = false,
+    Realizado = false,
+    Dinamico = true
+}
+
+invasion_AG[9] = {
+    NombreObjetivo = "SA6 EN ZONA MONTAÑOSA",
+    Unidades = "SHAVSHEBI RADAR #002",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "Conjunto de Puesto de Mando y SA6.",
+    Completado = "DERRIBADAS SA6 EN ZONA MONTAÑOSA. \n\nBuen trabajo!",
+    VerEstado = false,
+    Realizado = false,
+    Dinamico = true
 }
