@@ -117,3 +117,15 @@ invasion_AG[9] = {
     Realizado = false,
     Dinamico = true
 }
+
+invasion_AG[10] = {
+    NombreObjetivo = "APC KEBVI",
+    Unidades = "APCRFZ1",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "4 APC'S EN KEBVI.",
+    Completado = "DERRIBADAS APC EN KEBVI. \n\nBuen trabajo!",
+    VerEstado = false,
+    Realizado = false,
+    Dinamico = true
+}
