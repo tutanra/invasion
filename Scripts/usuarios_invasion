@@ -1,8 +1,2 @@
 return {
--- Table: {1}
-{
-Nombre = "Virek",
-role = "instructor",
-ucid = "86769396ad8bf1b92c392fbb5db7",
-},
 }

@@ -3,14 +3,15 @@ do
 
     local invasionSERVER = {}
 
+    invasionSERVER.fileNAME = lfs.writedir() .. [[Scripts\]] .. "usuarios_invasion"
+
     local function exportstring(s)
         return string.format("%q", s)
     end
     --// The Save Function
     invasionSERVER.save = function()
-        local _file = lfs.writedir() .. [[Scripts\]] .. "usuarios_invasion"
         local charS, charE = "   ", "\n"
-        local file, err = io.open(_file, "wb")
+        local file, err = io.open(invasionSERVER.fileNAME, "wb")
         if err then
             return err
         end
@@ -30,8 +31,7 @@ do
 
     --// The Load Function
     invasionSERVER.load = function()
-        local _file = lfs.writedir() .. [[Scripts\]] .. "usuarios_invasion"
-        local ftables, err = loadfile(_file)
+        local ftables, err = loadfile(invasionSERVER.fileNAME)
         if err then
             return _, err
         end
@@ -60,7 +60,7 @@ do
         local _ucid = net.get_player_info(playerID, "ucid")
         local _playerName = net.get_player_info(playerID, "name")
         net.log("SERVER: SSB - Player Selected slot - player: " .. _playerName .. " slot:" .. slotID .. " ucid: " .. _ucid)
-        if (has_value(invasion_users, "ucid", _ucid)) then
+--[[         if (has_value(invasion_users, "ucid", _ucid)) then
             net.log("SERVER: Usuario encontrado")
             net.force_player_slot(playerID, 0, "")
             local _chatMessage = string.format("*** Lo sentimos %s - Slot Ocupado - Utiliza otro Slot! ***", _playerName)
@@ -69,8 +69,37 @@ do
         else
             net.log("SERVER: Usuario no encontrado")
             return true
+        end ]]
+    end
+
+    invasionSERVER.onGameEvent = function(eventName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+        -- "friendly_fire", playerID, weaponName, victimPlayerID
+        -- "mission_end", winner, msg
+        -- "kill", killerPlayerID, killerUnitType, killerSide, victimPlayerID, victimUnitType, victimSide, weaponName
+        -- "self_kill", playerID
+        -- "change_slot", playerID, slotID, prevSide
+        -- "connect", playerID, name
+        -- "disconnect", playerID, name, playerSide, reason_code
+        -- "crash", playerID, unit_missionID
+        -- "eject", playerID, unit_missionID
+        -- "takeoff", playerID, unit_missionID, airdromeName
+        -- "landing", playerID, unit_missionID, airdromeName
+        -- "pilot_death", playerID, unit_missionID
+        if DCS:isServer() then
+            local message = eventName
+            if arg1 ~= nil then message = message .. ":" .. arg1 end
+            if arg2 ~= nil then message = message .. ":" .. arg2 end
+            if arg3 ~= nil then message = message .. ":" .. arg3 end
+            if arg4 ~= nil then message = message .. ":" .. arg4 end
+            if arg5 ~= nil then message = message .. ":" .. arg5 end
+            if arg6 ~= nil then message = message .. ":" .. arg6 end
+            if arg7 ~= nil then message = message .. ":" .. arg7 end
+            net.log("SERVER: " .. message)
+            --[[         DcsStats.update(message)
+            DcsStats.log(message) ]]
         end
     end
+
 
     invasionSERVER.onPlayerConnect = function(_playerID) --> true | false, "disconnect reason"
         local _ucid = net.get_player_info(_playerID, "ucid")
@@ -84,6 +113,10 @@ do
             net.log("SERVER: Tabla guardada.")
         end
         return true
+    end
+
+    invasionSERVER.onSimulationStart = function()
+        net.log('SERVER: Current mission is ' .. DCS.getMissionName())
     end
 
     DCS.setUserCallbacks(invasionSERVER)

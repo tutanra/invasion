@@ -29,17 +29,18 @@ CAPDispatcher:SetSquadronTakeoffInAir("Qeshm_CAP")
 CAPDispatcher:SetSquadronGci("Qeshm_CAP", 900, 1200)
 CAPDispatcher:SetSquadronOverhead("Qeshm_CAP", 1)
 
-CAPDispatcher:SetSquadron("Bandar_CAP", AIRBASE.PersianGulf.Bandar_e_Jask_airfield, "BANDAR_M21B")
-CAPDispatcher:SetSquadronTakeoffInAir("Bandar_CAP")
-CAPDispatcher:SetSquadronGci("Bandar_CAP", 900, 1200)
-CAPDispatcher:SetSquadronOverhead("Bandar_CAP", 1)
- 
 CAPDispatcher:SetSquadron("Lengeh_CAP", AIRBASE.PersianGulf.Bandar_Lengeh, "ABUMUSA_M29A")
 CAPDispatcher:SetSquadronTakeoffInAir("Lengeh_CAP")
 CAPDispatcher:SetSquadronGci("Lengeh_CAP", 900, 1200)
 CAPDispatcher:SetSquadronOverhead("Lengeh_CAP", 1)
 
---[[ CAPDispatcher:SetSquadron("TunbMusa_CAP", AIRBASE.PersianGulf.Tunb_Island_AFB, "TUNB_CAP_M29A")
+--[[
+    CAPDispatcher:SetSquadron("Bandar_CAP", AIRBASE.PersianGulf.Bandar_e_Jask_airfield, "BANDAR_M21B")
+CAPDispatcher:SetSquadronTakeoffInAir("Bandar_CAP")
+CAPDispatcher:SetSquadronGci("Bandar_CAP", 900, 1200)
+CAPDispatcher:SetSquadronOverhead("Bandar_CAP", 1)
+
+ CAPDispatcher:SetSquadron("TunbMusa_CAP", AIRBASE.PersianGulf.Tunb_Island_AFB, "TUNB_CAP_M29A")
 CAPDispatcher:SetSquadronTakeoffInAir("TunbMusa_CAP")
 CAPDispatcher:SetSquadronGci("TunbMusa_CAP", 900, 1200)
 CAPDispatcher:SetSquadronOverhead("TunbMusa_CAP", 1)
