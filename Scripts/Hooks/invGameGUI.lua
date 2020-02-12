@@ -10,6 +10,16 @@ do
     invasionSERVER.e111_users = {}
     invasionSERVER.e111_stats = {}
 
+    invasionSERVER.getStats = function(playerID)
+        for _, table in pairs(invasionSERVER.e111_stats) do
+            if (table.Id == playerID) then
+                return table
+            else
+                return nil
+            end
+        end
+    end
+
     -- // The Save Function
     invasionSERVER.save = function()
         local charS, charE = "   ", "\n"
@@ -31,18 +41,23 @@ do
 
     invasionSERVER.appendSTATS = function(_player)
         local charS, charC, charE = "   ", ",", "\n"
-        net.log("SERVER: Inicia Stats.")
-        local file, err = io.open(invasionSERVER.fileSTATS, "wb")
+        net.log("SERVER: Inicia Stats. : " .. _player)
+        local file, err = io.open(invasionSERVER.fileSTATS, "a")
+        net.log("Cargado")
         if err then return err end
-        local _ucid = net.get_player_info(_player, "ucid")
-        local stats = net.get_stat(_player, net.PS_CRASH) .. charC
-        stats = stats .. net.get_stat(_player, net.PS_CAR) .. charC
-        stats = stats .. net.get_stat(_player, net.PS_PLANE) .. charC
-        stats = stats .. net.get_stat(_player, net.PS_SHIP) .. charC
-        stats = stats .. net.get_stat(_player, net.PS_LAND) .. charC
-        stats = stats .. net.get_stat(_player, net.PS_CPS_EJECT)
-        net.log(os.date("%c") .. "," .. _ucid .. "," .. stats .. charE)
-        file:write(os.date("%c") .. "," .. _ucid .. "," .. stats .. charE)
+        local _stats = invasionSERVER.getStats(_player)
+        net.log("Estados")
+        local _msg = "{ "
+        if (_stats ~= nil) then
+            net.log(_stats.Nombre)
+            net.log(net.get_player_info(_player, "ucid"))
+            msg = msg .. net.get_player_info(_player, "ucid") .. charC
+            msg = msg .. _stats.Nombre .. charC
+            msg = msg .. _stats.ucid .. charC
+            msg = msg .. DCS.getMissionName .. charC           
+        end
+        net.log("Grabacion")
+        file:write(msg)
         file:close()
         net.log("SERVER: Stats guardados.")
     end
@@ -125,8 +140,6 @@ do
             if (eventName == "disconnect") then
                 invasionSERVER.appendSTATS(arg1)
             end
-            --[[         DcsStats.update(message)
-            DcsStats.log(message) ]]
         end
     end
 
@@ -134,21 +147,26 @@ do
         function(_playerID) -- > true | false, "disconnect reason"
             local _ucid = net.get_player_info(_playerID, "ucid")
             net.log("SERVER: Player " .. _ucid .. " conecta")
+            local _playerName = net.get_player_info(_playerID, "name")
             if (invasionSERVER.getUser(_ucid) == false) then
                 net.log("SERVER: Player not found : " .. _ucid)
-                local _playerName = net.get_player_info(_playerID, "name")
                 local _tbl = {Nombre = _playerName, ucid = _ucid}
                 table.insert(invasionSERVER.e111_users, _tbl)
                 invasionSERVER.save()
                 net.log("SERVER: Tabla guardada.")
             end
+            invasionSERVER.e111_stats[_ucid] = {}
+            invasionSERVER.e111_stats[_ucid].ucid = _ucid
+            invasionSERVER.e111_stats[_ucid].Nombre = _playerName
+            invasionSERVER.e111_stats[_ucid].Id = _playerID
+            invasionSERVER.e111_stats[_ucid].Time = DCS.getRealTime()
             return true
         end
 
-    invasionSERVER.onPlayerDisconnect = function(id, err_code)
+--[[     invasionSERVER.onPlayerDisconnect = function(id, err_code)
         net.log("Desconexión")
         invasionSERVER.appendSTATS(id)
-    end
+    end ]]
 
     invasionSERVER.onSimulationStart = function()
         net.log('SERVER: Current mission is ' .. DCS.getMissionName())
