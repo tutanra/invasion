@@ -1,23 +1,23 @@
 do
     net.log("SERVER: Invasion LOG loader")
 
+    -- VARIABLES 
     local invasionSERVER = {}
 
-    invasionSERVER.fileNAME = lfs.writedir() .. [[Scripts\]] .. "usuarios_invasion"
+    local function exportstring(s) return string.format("%q", s) end
+    invasionSERVER.fileUSERS = lfs.writedir() .. [[Scripts\e111_users]]
+    invasionSERVER.fileSTATS = lfs.writedir() .. [[Scripts\e111_stats]]
+    invasionSERVER.e111_users = {}
+    invasionSERVER.e111_stats = {}
 
-    local function exportstring(s)
-        return string.format("%q", s)
-    end
-    --// The Save Function
+    -- // The Save Function
     invasionSERVER.save = function()
         local charS, charE = "   ", "\n"
-        local file, err = io.open(invasionSERVER.fileNAME, "wb")
-        if err then
-            return err
-        end
+        local file, err = io.open(invasionSERVER.fileUSERS, "wb")
+        if err then return err end
         -- initiate variables for save procedure
         file:write("return {" .. charE)
-        for idx, t in ipairs(invasionSERVER.invasion_users) do
+        for idx, t in ipairs(invasionSERVER.e111_users) do
             file:write("-- Table: {" .. idx .. "}" .. charE)
             file:write("{" .. charE)
             for i, v in pairs(t) do
@@ -29,12 +29,28 @@ do
         file:close()
     end
 
-    --// The Load Function
+    invasionSERVER.appendSTATS = function(_player)
+        local charS, charC, charE = "   ", ",", "\n"
+        net.log("SERVER: Inicia Stats.")
+        local file, err = io.open(invasionSERVER.fileSTATS, "wb")
+        if err then return err end
+        local _ucid = net.get_player_info(_player, "ucid")
+        local stats = net.get_stat(_player, net.PS_CRASH) .. charC
+        stats = stats .. net.get_stat(_player, net.PS_CAR) .. charC
+        stats = stats .. net.get_stat(_player, net.PS_PLANE) .. charC
+        stats = stats .. net.get_stat(_player, net.PS_SHIP) .. charC
+        stats = stats .. net.get_stat(_player, net.PS_LAND) .. charC
+        stats = stats .. net.get_stat(_player, net.PS_CPS_EJECT)
+        net.log(os.date("%c") .. "," .. _ucid .. "," .. stats .. charE)
+        file:write(os.date("%c") .. "," .. _ucid .. "," .. stats .. charE)
+        file:close()
+        net.log("SERVER: Stats guardados.")
+    end
+
+    -- // The Load Function
     invasionSERVER.load = function()
-        local ftables, err = loadfile(invasionSERVER.fileNAME)
-        if err then
-            return _, err
-        end
+        local ftables, err = loadfile(invasionSERVER.fileUSERS)
+        if err then return _, err end
         return ftables()
     end
 
@@ -42,25 +58,35 @@ do
     invasionSERVER.has_value = function(_table, _index, _value)
         if (_table ~= nil) then
             for _, _tb1 in ipairs(_table) do
-                if (_tb1[_index] == _value) then
-                    return true
-                end
+                if (_tb1[_index] == _value) then return true end
             end
         end
         return false
     end
 
-    invasionSERVER.invasion_users = invasionSERVER.load()
-
-    invasionSERVER.getUser = function(_ucid)
-        return invasionSERVER.has_value(invasionSERVER.invasion_users, "ucid", _ucid)
+    invasionSERVER.getUser = function(_table, _index, _value)
+        if (_table ~= nil) then
+            for _, _tb1 in ipairs(_table) do
+                if (_tb1[_index] == _value) then return true end
+            end
+        end
+        return false
     end
 
-    invasionSERVER.onPlayerTryChangeSlot = function(playerID, side, slotID)
-        local _ucid = net.get_player_info(playerID, "ucid")
-        local _playerName = net.get_player_info(playerID, "name")
-        net.log("SERVER: SSB - Player Selected slot - player: " .. _playerName .. " slot:" .. slotID .. " ucid: " .. _ucid)
---[[         if (has_value(invasion_users, "ucid", _ucid)) then
+    invasionSERVER.e111_users = invasionSERVER.load()
+
+    invasionSERVER.getUser = function(_ucid)
+        return
+            invasionSERVER.has_value(invasionSERVER.e111_users, "ucid", _ucid)
+    end
+
+    invasionSERVER.onPlayerTryChangeSlot =
+        function(playerID, side, slotID)
+            local _ucid = net.get_player_info(playerID, "ucid")
+            local _playerName = net.get_player_info(playerID, "name")
+            net.log("SERVER: SSB - Player Selected slot - player: " ..
+                        _playerName .. " slot:" .. slotID .. " ucid: " .. _ucid)
+            --[[         if (has_value(invasion_users, "ucid", _ucid)) then
             net.log("SERVER: Usuario encontrado")
             net.force_player_slot(playerID, 0, "")
             local _chatMessage = string.format("*** Lo sentimos %s - Slot Ocupado - Utiliza otro Slot! ***", _playerName)
@@ -70,9 +96,10 @@ do
             net.log("SERVER: Usuario no encontrado")
             return true
         end ]]
-    end
+        end
 
-    invasionSERVER.onGameEvent = function(eventName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+    invasionSERVER.onGameEvent = function(eventName, arg1, arg2, arg3, arg4,
+                                          arg5, arg6, arg7)
         -- "friendly_fire", playerID, weaponName, victimPlayerID
         -- "mission_end", winner, msg
         -- "kill", killerPlayerID, killerUnitType, killerSide, victimPlayerID, victimUnitType, victimSide, weaponName
@@ -95,24 +122,32 @@ do
             if arg6 ~= nil then message = message .. ":" .. arg6 end
             if arg7 ~= nil then message = message .. ":" .. arg7 end
             net.log("SERVER: " .. message)
+            if (eventName == "disconnect") then
+                invasionSERVER.appendSTATS(arg1)
+            end
             --[[         DcsStats.update(message)
             DcsStats.log(message) ]]
         end
     end
 
-
-    invasionSERVER.onPlayerConnect = function(_playerID) --> true | false, "disconnect reason"
-        local _ucid = net.get_player_info(_playerID, "ucid")
-        net.log("SERVER: Player " .. _ucid .. " conecta")
-        if (invasionSERVER.getUser(_ucid) == false) then
-            net.log("SERVER: Player not found : " .. _ucid)
-            local _playerName = net.get_player_info(_playerID, "name")
-            local _tbl = {Nombre = _playerName, ucid = _ucid}
-            table.insert(invasionSERVER.invasion_users, _tbl)
-            invasionSERVER.save()
-            net.log("SERVER: Tabla guardada.")
+    invasionSERVER.onPlayerConnect =
+        function(_playerID) -- > true | false, "disconnect reason"
+            local _ucid = net.get_player_info(_playerID, "ucid")
+            net.log("SERVER: Player " .. _ucid .. " conecta")
+            if (invasionSERVER.getUser(_ucid) == false) then
+                net.log("SERVER: Player not found : " .. _ucid)
+                local _playerName = net.get_player_info(_playerID, "name")
+                local _tbl = {Nombre = _playerName, ucid = _ucid}
+                table.insert(invasionSERVER.e111_users, _tbl)
+                invasionSERVER.save()
+                net.log("SERVER: Tabla guardada.")
+            end
+            return true
         end
-        return true
+
+    invasionSERVER.onPlayerDisconnect = function(id, err_code)
+        net.log("Desconexión")
+        invasionSERVER.appendSTATS(id)
     end
 
     invasionSERVER.onSimulationStart = function()
