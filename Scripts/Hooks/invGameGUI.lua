@@ -68,8 +68,6 @@ do
             _msg = _msg .. os.date("")
             _msg = _msg .. _stats.ucid .. charC
             _msg = _msg .. _stats.Nombre .. charC
-            net.log("SERVER : Tiempo " .. _stats.Time)
-            net.log("SERVER : Init " .. _stats.TimeInit)
             if (_stats.TimeInit > 0) then
                 _stats.Time = _stats.Time + (DCS.getRealTime() - _stats.TimeInit)
             end
