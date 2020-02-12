@@ -45,15 +45,15 @@ do
 
     invasionSERVER.statN = function(id, _n)
         local _rtn = net.get_stat(_player, _n)
-        if( _rtn == nil ) then
-            return "0"
-        else
+        if (_rtn ~= nil) then
             return tostring(_rtn)
+        else
+            return "0"
         end
     end
 
     invasionSERVER.appendSTATS = function(_player)
-        local charS, charC, charE = "   ", ",", " }\n"
+        local charS, charC, charE = "   ", ",", "\n"
         net.log("SERVER: Inicia Stats. : " .. _player)
         local file, err = io.open(invasionSERVER.fileSTATS, "a")
         net.log("Cargado")
@@ -63,9 +63,9 @@ do
         local _stats = invasionSERVER.getStats(_player)
         net.log("Estados")
         -- UCID, NAME, TIME, MISION, BLUE, AUTOKILL, CRASHES, VEHICLES, PLANES, SHIPS, LANDINGS, EJECTS
-        local _msg = "{ "
+        local _msg = ""
         if (_stats ~= nil) then
-            _msg = _msg .. os.date("")
+            _msg = _msg .. os.date("%y-%m-%d %H:%M:%S") .. charC
             _msg = _msg .. _stats.ucid .. charC
             _msg = _msg .. _stats.Nombre .. charC
             if (_stats.TimeInit > 0) then
