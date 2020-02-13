@@ -64,7 +64,7 @@ do
         net.log("Estados")
         -- UCID, NAME, TIME, MISION, BLUE, AUTOKILL, CRASHES, VEHICLES, PLANES, SHIPS, LANDINGS, EJECTS
         local _msg = ""
-        if (_stats ~= nil) then
+        if (_stats ~= nil and _stats.Time > 5) then
             _msg = _msg .. os.date("%y-%m-%d %H:%M:%S") .. charC
             _msg = _msg .. _stats.ucid .. charC
             _msg = _msg .. _stats.Nombre .. charC
@@ -184,6 +184,7 @@ do
                 invasionSERVER.appendSTATS(arg1)
             elseif (eventName == "change_slot") then
                 local _stats = invasionSERVER.getStats(arg1)
+                net.log( "Tipo de plane : ".. DCS.getUnitProperty(arg2,DCS.UNIT_TYPE)
                 net.log("Inicia el tiempo con player : " .. arg1 .. " y slot " .. arg2)
                 if (tonumber(arg2) > 0) then
                     net.log("SERVER: Inicia el tiempo")
