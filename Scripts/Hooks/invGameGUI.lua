@@ -7,15 +7,20 @@ do
     local function exportstring(s)
         return string.format("%q", s)
     end
+
+    local function isEmpty(s)
+        return s == nil or s == "" or s == 0
+    end
+
     invasionSERVER.fileUSERS = lfs.writedir() .. [[Scripts\e111_users]]
     invasionSERVER.fileSTATS = lfs.writedir() .. [[Scripts\e111_stats]]
     invasionSERVER.e111_users = {}
     invasionSERVER.e111_stats = {}
 
     invasionSERVER.getStats = function(playerID)
-        for _, table in pairs(invasionSERVER.e111_stats) do
-            if (table.Id == playerID) then
-                return table
+        for _, _table in pairs(invasionSERVER.e111_stats) do
+            if (_table.Id == playerID) then
+                return _table
             else
                 return nil
             end
@@ -159,19 +164,19 @@ do
         if DCS:isServer() then
             local message = eventName
             if arg1 ~= nil then
-                message = message .. ":" .. arg1
+                message = message .. ":arg1:" .. arg1
             end
             if arg2 ~= nil then
-                message = message .. ":" .. arg2
+                message = message .. ":arg2:" .. arg2
             end
             if arg3 ~= nil then
-                message = message .. ":" .. arg3
+                message = message .. ":arg3:" .. arg3
             end
             if arg4 ~= nil then
-                message = message .. ":" .. arg4
+                message = message .. ":arg4:" .. arg4
             end
             if arg5 ~= nil then
-                message = message .. ":" .. arg5
+                message = message .. ":arg5:" .. arg5
             end
             if arg6 ~= nil then
                 message = message .. ":" .. arg6
@@ -184,17 +189,29 @@ do
                 invasionSERVER.appendSTATS(arg1)
             elseif (eventName == "change_slot") then
                 local _stats = invasionSERVER.getStats(arg1)
-                net.log( "Tipo de plane : ".. DCS.getUnitProperty(arg2,DCS.UNIT_TYPE)
-                net.log("Inicia el tiempo con player : " .. arg1 .. " y slot " .. arg2)
-                if (tonumber(arg2) > 0) then
+                net.log("SERVER: Inicia el tiempo con player : " .. arg1 .. " y slot " .. arg2 .. " ucid " .. _stats.ucid)
+                _stats.Avion = DCS.getUnitProperty(arg2, DCS.UNIT_TYPE)
+                if (arg3 == 0 and arg2 > 0) then
                     net.log("SERVER: Inicia el tiempo")
+                    _stats.slotID = arg2
                     _stats.TimeInit = DCS.getRealTime()
                 else
-                    net.log("SERVER: Para el tiempo")
-                    if (_stats.TimeInit > 0) then
-                        net.log("SERVER: Acumula el tiempo")
+                    if (arg3 > 0 and arg2 > 0) then
+                        -- CAMBIO DE SLOT
+                        net.log("SERVER: Cambio de slots")
                         _stats.Time = _stats.Times + (DCS.getRealTime() - _stats.TimeInit)
                         _stats.TimeInit = 0
+                        invasionSERVER.appendSTATS(arg1)
+                    else
+                        if (arg3 > 0 and arg2 < 1) then
+                            net.log("SERVER: De avión a espectadores")
+                            _stats.Time = _stats.Times + (DCS.getRealTime() - _stats.TimeInit)
+                            _stats.TimeInit = 0
+                            invasionSERVER.appendSTATS(arg1)
+                        end
+                        _stats.TimeInit = 0
+                        _stats.Time = 0
+                        _stats.slotID = 0
                     end
                 end
             elseif (eventName == "friendly_fire") then
@@ -227,6 +244,8 @@ do
         invasionSERVER.e111_stats[_ucid].Mission = DCS.getMissionName()
         invasionSERVER.e111_stats[_ucid].Blue = 0
         invasionSERVER.e111_stats[_ucid].SelfKill = 0
+        invasionSERVER.e111_stats[_ucid].SlotID = 0
+        invasionSERVER.e111_stats[_ucid].Avion = 0
         return true
     end
 
