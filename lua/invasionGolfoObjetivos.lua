@@ -186,3 +186,13 @@ invasion_AG[16] = {
     Realizado = false,
     Dinamico = true
 }
+invasion_AG[17] = {
+    NombreObjetivo = "VALLE HANGAR",
+    Unidades = "RFAPC4",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "3 APC + ZU23",
+    Completado = "Destruido Defensa interior.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+    Realizado = false,
+    Dinamico = true
+}
