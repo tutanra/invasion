@@ -135,6 +135,18 @@ invasion_AG[11] = {
     Trigger = "REFOBJ8"
 }
 invasion_AG[12] = {
+    NombreObjetivo = "CONTROL MONTAÑOSO 2",
+    Unidades = "RFAPC3",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "3 APC, INFANTERIA",
+    Completado = "Destruido Fuerza de control, toma de fuerzas aliadas hacía objetivo.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+    Realizado = false,
+    Dinamico = true,
+    Trigger = "REFOBJ8"
+}
+
+invasion_AG[13] = {
     NombreObjetivo = "PUESTO DE CARRETERA",
     Unidades = "BlueMASH #009",
     UnidadesTipo = "grupo",
@@ -144,7 +156,7 @@ invasion_AG[12] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[13] = {
+invasion_AG[14] = {
     NombreObjetivo = "AAA EN SAQR PORT",
     Unidades = "DefensaOBJ1Shilka",
     UnidadesTipo = "grupo",
@@ -154,7 +166,7 @@ invasion_AG[13] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[14] = {
+invasion_AG[15] = {
     NombreObjetivo = "DEFENSA AL LIMAH OESTE",
     Unidades = "DEFENSA AEREA AL LIMAH #002",
     UnidadesTipo = "grupo",
@@ -164,7 +176,7 @@ invasion_AG[14] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[15] = {
+invasion_AG[16] = {
     NombreObjetivo = "SA13 VALLE INTERIOR",
     Unidades = "SA13MOUNTAIN",
     UnidadesTipo = "grupo",
