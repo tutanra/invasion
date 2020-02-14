@@ -1,0 +1,62 @@
+return {
+    -- Table: {1}
+    {
+        ucid = "86769396ad875ccbf1b92c392fbb5db7",
+        Nombre = "[E111] Tutan"
+    },
+    -- Table: {2}
+    {
+        ucid = "957f4a18b279ca872a09fe0662ea3937",
+        Nombre = "player"
+    },
+    -- Table: {3}
+    {
+        ucid = "d8a5f2ffd3d3c214f95a9ff83bae34f4",
+        Nombre = "[E111] TaKaRa"
+    },
+    -- Table: {4}
+    {
+        ucid = "870edd792f1c91cfa24fa90b37761620",
+        Nombre = "[E111]mustang51"
+    },
+    -- Table: {5}
+    {
+        ucid = "0cffcf1d446aba0aa7d6c4ebecaadf3e",
+        Nombre = "[E111] Virek"
+    },
+    -- Table: {6}
+    {
+        ucid = "88ae806181a863cf8ebaf8ccfdb2617f",
+        Nombre = "[E111] AspaR"
+    },
+    -- Table: {7}
+    {
+        ucid = "c6dafa64c219894c33fcc38f4e427b1f",
+        Nombre = "Mistral"
+    },
+    -- Table: {8}
+    {
+        ucid = "ecff637a527a2f5c12dd31e14073714c",
+        Nombre = "TAKKO"
+    },
+    -- Table: {9}
+    {
+        ucid = "71be6e5a09c1cd3979a8ec170fd99010",
+        Nombre = "TORO 1-5 || Pirox"
+    },
+    -- Table: {10}
+    {
+        ucid = "72a8ecb9cf0c46f535aebfe0fc139d91",
+        Nombre = "TORO 1-5 || Pirox"
+    },
+    -- Table: {11}
+    {
+        ucid = "b6c705c779fd67cda35fce400fa35664",
+        Nombre = "Novemberkilo"
+    },
+    -- Table: {12}
+    {
+        ucid = "06d3130b8d385dbac16db949c907f762",
+        Nombre = "lukiahi"
+    }
+}
