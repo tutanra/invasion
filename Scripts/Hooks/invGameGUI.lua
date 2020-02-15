@@ -12,10 +12,28 @@ do
         return s == nil or s == "" or s == 0
     end
 
+    local function getCategory(id)
+        local _killed_target_category = DCS.getUnitTypeAttribute(id, "category")
+        if _killed_target_category == nil then
+            local _killed_target_cat_check_ship = DCS.getUnitTypeAttribute(id, "DeckLevel")
+            local _killed_target_cat_check_plane = DCS.getUnitTypeAttribute(id, "WingSpan")
+            if _killed_target_cat_check_ship ~= nil and _killed_target_cat_check_plane == nil then
+                _killed_target_category = "Ships"
+            elseif _killed_target_cat_check_ship == nil and _killed_target_cat_check_plane ~= nil then
+                _killed_target_category = "Planes"
+            else
+                _killed_target_category = "Helis"
+            end
+        end
+        return _killed_target_category
+    end
+
     invasionSERVER.fileUSERS = lfs.writedir() .. [[Scripts\e111_users]]
     invasionSERVER.fileSTATS = lfs.writedir() .. [[Scripts\e111_stats]]
+    invasionSERVER.fileKILLS = lfs.writedir() .. [[Scripts\e111_killboard]]
     invasionSERVER.e111_users = {}
     invasionSERVER.e111_stats = {}
+    invasionSERVER.e111_kills = {}
 
     invasionSERVER.getStats = function(playerID)
         for _, _table in pairs(invasionSERVER.e111_stats) do
@@ -57,20 +75,50 @@ do
         end
     end
 
-    invasionSERVER.appendSTATS = function(_player)
-        local charS, charC, charE = "   ", ",", "\n"
-        net.log("SERVER: Inicia Stats. : " .. _player)
-        local file, err = io.open(invasionSERVER.fileSTATS, "a")
-        net.log("Cargado")
-        if err then
-            return err
-        end
-        local _stats = invasionSERVER.getStats(_player)
-        net.log("Estados")
-        -- UCID, NAME, TIME, MISION, AVION, BLUE, AUTOKILL, CRASHES, VEHICLES, PLANES, SHIPS, LANDINGS, EJECTS
+    invasionSERVER.appendKILLS = function(_player, _stats)
         local _msg = ""
+        if (_stats ~= nil) then
+            local charS, charC, charE = "   ", ";", "\n"
+            net.log("Entra en kills")
+            local _foundKILL = false
+            for _v, _kill in pairs(invasionSERVER.e111_kills) do
+                if _kill.Id == _player then
+                    if _foundKILL == false then
+                        net.log("Encontrado kills")
+                        file, err = io.open(invasionSERVER.fileKILLS, "a")
+                        if err then
+                            return err
+                        end
+                        _foundKILL = true
+                    end
+                    _msg = _msg .. _kill.Time .. charC
+                    _msg = _msg .. _stats.ucid .. charC
+                    _msg = _msg .. _stats.Nombre .. charC
+                    _msg = _msg .. _kill.arma .. charC
+                    _msg = _msg .. _kill.victima .. charC
+                    _msg = _msg .. _kill.tipo .. charE
+                    file:write(_msg)
+                    invasionSERVER.e111_kills[_v] = nil
+                end
+            end
+            if _foundKILL == true then
+                file:close()
+                net.log("SERVER: KILLS guardados.")
+            end
+        end
+    end
+
+    invasionSERVER.appendSTATS = function(_stats)
+        local _msg = ""
+        local _player = _stats.Id
         _stats.Time = DCS.getRealTime() - _stats.Time
         if (_stats ~= nil and _stats.Time > 5) then
+            local charS, charC, charE = "   ", ";", "\n"
+            local file, err = io.open(invasionSERVER.fileSTATS, "a")
+            if err then
+                return err
+            end
+            -- UCID, NAME, TIME, MISION, AVION, BLUE, AUTOKILL, DEATH, TAKEOFF, LANDING, EJECTS
             _msg = _msg .. os.date("%y-%m-%d %H:%M:%S") .. charC
             _msg = _msg .. _stats.ucid .. charC
             _msg = _msg .. _stats.Nombre .. charC
@@ -79,20 +127,22 @@ do
             _msg = _msg .. _stats.Avion .. charC
             _msg = _msg .. _stats.Blue .. charC
             _msg = _msg .. _stats.SelfKill .. charC
-            _msg = _msg .. invasionSERVER.statN(_player, 1) .. charC --nº of crashes
-            _msg = _msg .. invasionSERVER.statN(_player, 2) .. charC --nº of destroyed vehicles
-            _msg = _msg .. invasionSERVER.statN(_player, 3) .. charC --nº of planes/helicopters
-            _msg = _msg .. invasionSERVER.statN(_player, 4) .. charC --nº of ships
-            _msg = _msg .. invasionSERVER.statN(_player, 6) .. charC --nº of landings
-            _msg = _msg .. invasionSERVER.statN(_player, 7) .. charE --nº of ejects
-            net.log("Grabacion")
+            _msg = _msg .. _stats.pilotDeath .. charC
+            _msg = _msg .. _stats.takeoff .. charC
+            _msg = _msg .. _stats.landing .. charC
+            _msg = _msg .. _stats.eject .. charE
             file:write(_msg)
             _stats.Time = 0
             _stats.Blue = 0
             _stats.SelfKill = 0
+            _stats.pilotDeath = 0
+            _stats.takeoff = 0
+            _stats.landing = 0
+            _stats.eject = 0
+            file:close()
+            invasionSERVER.appendKILLS(_player, _stats)
+            net.log("SERVER: Stats guardados.")
         end
-        file:close()
-        net.log("SERVER: Stats guardados.")
     end
 
     -- // The Load Function
@@ -164,8 +214,8 @@ do
         -- "landing", playerID, unit_missionID, airdromeName
         -- "pilot_death", playerID, unit_missionID
         if DCS:isServer() then
-            local message = eventName
-            if arg1 ~= nil then
+            --[[            local message = eventName
+             if arg1 ~= nil then
                 message = message .. ":arg1:" .. arg1
             end
             if arg2 ~= nil then
@@ -181,43 +231,72 @@ do
                 message = message .. ":arg5:" .. arg5
             end
             if arg6 ~= nil then
-                message = message .. ":" .. arg6
+                message = message .. ":arg6:" .. arg6
             end
             if arg7 ~= nil then
-                message = message .. ":" .. arg7
+                message = message .. ":arg7:" .. arg7
             end
-            net.log("SERVER: " .. message)
-            if (eventName == "disconnect") then
-                invasionSERVER.appendSTATS(arg1)
-            elseif (eventName == "change_slot") then
+            net.log("SERVER: " .. message) ]]
+            -- KILLS
+            if eventName == "kill" then
+                if arg1 ~= -1 and arg4 == -1 then
+                    net.log("SERVER: Kill humano")
+                    local _kill = {}
+                    _kill.Id = arg1
+                    _kill.Time = os.date("%y-%m-%d %H:%M:%S")
+                    _kill.arma = arg7
+                    _kill.victima = arg5
+                    _kill.tipo = getCategory(arg5)
+                    table.insert(invasionSERVER.e111_kills, _kill)
+                end
+            elseif
+                eventName == "disconnect" or eventName == "change_slot" or eventName == "friendly_fire" or eventName == "self_kill" or
+                    eventName == "pilot_death" or
+                    eventName == "takeoff" or
+                    eventName == "landing" or
+                    eventName == "eject"
+             then
+                -- CARGA STATS
                 local _stats = invasionSERVER.getStats(arg1)
-                net.log("SERVER: Inicia el tiempo con player : " .. arg1 .. " y slot " .. arg2 .. " ucid " .. _stats.ucid)
-                _stats.slotID = arg2
-                if (arg3 == 0 and arg2 ~= "") then
-                    net.log("SERVER: Inicia el tiempo unicamente")
-                    _stats.Time = DCS.getRealTime()
-                    _stats.Avion = DCS.getUnitProperty(arg2, DCS.UNIT_TYPE)
-                else
-                    if (arg3 ~= 0 and arg2 ~= "") then
-                        -- CAMBIO DE SLOT
-                        net.log("SERVER: Cambio de slots")
-                        invasionSERVER.appendSTATS(arg1)
-                        _stats.Avion = DCS.getUnitProperty(arg2, DCS.UNIT_TYPE)
+                if (eventName == "disconnect") then
+                    -- DESCONEXION
+                    if (arg2 ~= "") then
+                        invasionSERVER.appendSTATS(_stats)
+                    end
+                elseif (eventName == "change_slot") then
+                    -- CAMBIA SLOTS
+                    if (arg3 == 0 and arg2 ~= "") then
+                        net.log("SERVER: Inicia el tiempo unicamente")
                         _stats.Time = DCS.getRealTime()
+                        _stats.Avion = DCS.getUnitProperty(arg2, DCS.UNIT_TYPE)
                     else
-                        if (arg3 ~= 0 and arg2 == "") then
-                            net.log("SERVER: De avión a espectadores")
-                            invasionSERVER.appendSTATS(arg1)
-                            _stats.Avion = ""
+                        if (arg3 ~= 0 and arg2 ~= "") then
+                            -- CAMBIO DE SLOT
+                            net.log("SERVER: Cambio de slots")
+                            invasionSERVER.appendSTATS(_stats)
+                            _stats.Avion = DCS.getUnitProperty(arg2, DCS.UNIT_TYPE)
+                            _stats.Time = DCS.getRealTime()
+                        else
+                            if (arg3 ~= 0 and arg2 == "") then
+                                net.log("SERVER: De avión a espectadores")
+                                invasionSERVER.appendSTATS(_stats)
+                                _stats.Avion = ""
+                            end
                         end
                     end
+                elseif (eventName == "friendly_fire") then
+                    _stats.Blue = _stats.Blue + 1
+                elseif (eventName == "self_kill") then
+                    _stats.SelfKill = _stats.SelfKill + 1
+                elseif (eventName == "pilot_death") then
+                    _stats.pilotDeath = _stats.pilotDeath + 1
+                elseif (eventName == "takeoff") then
+                    _stats.takeoff = _stats.takeoff + 1
+                elseif (eventName == "landing") then
+                    _stats.landing = _stats.landing + 1
+                elseif (eventName == "eject") then
+                    _stats.eject = _stats.eject + 1
                 end
-            elseif (eventName == "friendly_fire") then
-                local _stats = invasionSERVER.getStats(arg1)
-                _stats.Blue = _stats.Blue + 1
-            elseif (eventName == "self_kill") then
-                local _stats = invasionSERVER.getStats(arg1)
-                _stats.SelfKill = _stats.SelfKill + 1
             end
         end
     end
@@ -238,22 +317,19 @@ do
         invasionSERVER.e111_stats[_ucid].Nombre = _playerName
         invasionSERVER.e111_stats[_ucid].Id = _playerID
         invasionSERVER.e111_stats[_ucid].Time = 0
-        invasionSERVER.e111_stats[_ucid].TimeInit = 0
         invasionSERVER.e111_stats[_ucid].Mission = DCS.getMissionName()
         invasionSERVER.e111_stats[_ucid].Blue = 0
         invasionSERVER.e111_stats[_ucid].SelfKill = 0
-        invasionSERVER.e111_stats[_ucid].SlotID = 0
         invasionSERVER.e111_stats[_ucid].Avion = 0
-        return true
+        invasionSERVER.e111_stats[_ucid].pilotDeath = 0
+        invasionSERVER.e111_stats[_ucid].takeoff = 0
+        invasionSERVER.e111_stats[_ucid].landing = 0
+        invasionSERVER.e111_stats[_ucid].eject = 0
     end
 
-    --[[     invasionSERVER.onPlayerDisconnect = function(id, err_code)
-        net.log("Desconexión")
-        invasionSERVER.appendSTATS(id)
-    end ]]
-    invasionSERVER.onSimulationStart = function()
+--[[     invasionSERVER.onSimulationStart = function()
         net.log("SERVER: Current mission is " .. DCS.getMissionName())
-    end
+    end ]]
 
     DCS.setUserCallbacks(invasionSERVER)
     net.log("SERVER: Invasion after LOG loader")
