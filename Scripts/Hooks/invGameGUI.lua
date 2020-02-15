@@ -48,7 +48,7 @@ do
     -- // The Save Function
     invasionSERVER.save = function()
         local charS, charE = "   ", "\n"
-        local file, err = io.open(invasionSERVER.fileUSERS, "wb")
+        local file, err = io.open(invasionSERVER.fileUSERS, "w")
         if err then
             return err
         end
@@ -166,17 +166,6 @@ do
         return false
     end
 
-    invasionSERVER.getUser = function(_table, _index, _value)
-        if (_table ~= nil) then
-            for _, _tb1 in ipairs(_table) do
-                if (_tb1[_index] == _value) then
-                    return true
-                end
-            end
-        end
-        return false
-    end
-
     invasionSERVER.e111_users = invasionSERVER.load()
 
     invasionSERVER.getUser = function(_ucid)
@@ -199,7 +188,7 @@ do
             return true
         end 
     end
-]]
+    ]]
     invasionSERVER.onGameEvent = function(eventName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
         -- "friendly_fire", playerID, weaponName, victimPlayerID
         -- "mission_end", winner, msg
@@ -258,12 +247,15 @@ do
              then
                 -- CARGA STATS
                 local _stats = invasionSERVER.getStats(arg1)
+                --[[                 
                 if (eventName == "disconnect") then
                     -- DESCONEXION
                     if (arg2 ~= "") then
                         invasionSERVER.appendSTATS(_stats)
                     end
-                elseif (eventName == "change_slot") then
+                else 
+                ]]
+                    if (eventName == "change_slot") then
                     -- CAMBIA SLOTS
                     if (arg3 == 0 and arg2 ~= "") then
                         net.log("SERVER: Inicia el tiempo unicamente")
@@ -327,9 +319,11 @@ do
         invasionSERVER.e111_stats[_ucid].eject = 0
     end
 
---[[     invasionSERVER.onSimulationStart = function()
+    --[[     
+    invasionSERVER.onSimulationStart = function()
         net.log("SERVER: Current mission is " .. DCS.getMissionName())
-    end ]]
+    end 
+    ]]
 
     DCS.setUserCallbacks(invasionSERVER)
     net.log("SERVER: Invasion after LOG loader")
