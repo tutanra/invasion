@@ -195,6 +195,17 @@ function continueGroup(_groupName)
     end
 end
 
+function stopGroup(_groupName)
+    local _group = Group.getByName(_groupName)
+    if (_group ~= nil) then
+        trigger.action.groupStopMoving(_group)
+    end
+end
+
+function Bengala(_unit)
+    trigger.action.signalFlare(Unit.getPoint(_unit), trigger.flareColor.Red, 0)
+end
+
 -- INICIAR CAP
 function startGroup(_grupoNombre)
     local _group = Group.getByName(_grupoNombre)
@@ -489,12 +500,16 @@ local function checkMissionComplete(_category)
                         missionCommands.removeItemForCoalition(coalition.side.BLUE, {_nombreMision})
                     else
                         trigger.action.removeMark(j)
-                        if (_menu.Trigger ~= nil) then
-                            if (type(_trigger) == "string") then
-                                continueGroup(_menu.Trigger)
-                            elseif (type(_trigger) == "function") then
-                                _menu.Trigger()
-                            end
+                    end
+                    if (_menu.Trigger ~= nil) then
+                        if (type(_menu.Trigger) == "string") then
+                            env.info("Trigger String")
+                            continueGroup(_menu.Trigger)
+                        elseif (type(_menu.Trigger) == "function") then
+                            env.info("Trigger Funcion")
+                            _menu.Trigger()
+                        else
+                            env.info("Hay trigger pero no detecta")
                         end
                     end
                 end
@@ -508,13 +523,17 @@ local function checkMissionComplete(_category)
                         missionCommands.removeItemForCoalition(coalition.side.BLUE, {_nombreMision})
                     else
                         trigger.action.removeMark(j)
-                        if (_menu.Trigger ~= nil) then
-                            if (type(_trigger) == "string") then
-                                continueGroup(_menu.Trigger)
-                            elseif (type(_trigger) == "function") then
-                                _menu.Trigger()
-                            end
+                    end
+                    if (_menu.Trigger ~= nil) then
+                        if (type(_menu.Trigger) == "string") then
+                            continueGroup(_menu.Trigger)
+                        elseif (type(_menu.Trigger) == "function") then
+                            _menu.Trigger()
+                        else
+                            env.info("Hay trigger pero no detecta")
                         end
+                    else
+                        env.info("No hay trigger")
                     end
                 end
             end

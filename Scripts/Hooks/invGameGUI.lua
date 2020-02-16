@@ -39,8 +39,6 @@ do
         for _, _table in pairs(invasionSERVER.e111_stats) do
             if (_table.Id == playerID) then
                 return _table
-            else
-                return nil
             end
         end
     end
@@ -55,7 +53,7 @@ do
         -- initiate variables for save procedure
         file:write("return {" .. charE)
         for idx, t in ipairs(invasionSERVER.e111_users) do
-            file:write("-- Table: {" .. idx .. "}" .. charE)
+            -- file:write("-- Table: {" .. idx .. "}" .. charE)
             file:write("{" .. charE)
             for i, v in pairs(t) do
                 file:write(i .. " = " .. exportstring(t[i]) .. "," .. charE)
@@ -75,13 +73,43 @@ do
         end
     end
 
+
+    function ripairs(t)
+        -- Try not to use break when using this function;
+        -- it may cause the array to be left with empty slots
+        local ci = 0
+        local remove = function()
+            t[ci] = nil
+        end
+        return function(t, i)
+            i = i+1
+            ci = i
+            local v = t[i]
+            if v == nil then
+                local rj = 0
+                for ri = 1, i-1 do
+                    if t[ri] ~= nil then
+                        rj = rj+1
+                        t[rj] = t[ri]
+                    end
+                end
+                for ri = rj+1, i do
+                    t[ri] = nil
+                end
+                return
+            end
+            return i, v, remove
+        end, t, ci
+    end
+
     invasionSERVER.appendKILLS = function(_player, _stats)
         local _msg = ""
+        local file
         if (_stats ~= nil) then
             local charS, charC, charE = "   ", ";", "\n"
             net.log("Entra en kills")
             local _foundKILL = false
-            for _v, _kill in pairs(invasionSERVER.e111_kills) do
+            for i, _kill, remove in ripairs(invasionSERVER.e111_kills) do
                 if _kill.Id == _player then
                     if _foundKILL == false then
                         net.log("Encontrado kills")
@@ -94,11 +122,12 @@ do
                     _msg = _msg .. _kill.Time .. charC
                     _msg = _msg .. _stats.ucid .. charC
                     _msg = _msg .. _stats.Nombre .. charC
+                    _msg = _msg .. _stats.Avion .. charC
                     _msg = _msg .. _kill.arma .. charC
                     _msg = _msg .. _kill.victima .. charC
-                    _msg = _msg .. _kill.tipo .. charE
+                    _msg = _msg .. _kill.tipo .. charE                  
+                    remove()
                     file:write(_msg)
-                    invasionSERVER.e111_kills[_v] = nil
                 end
             end
             if _foundKILL == true then
@@ -110,14 +139,14 @@ do
 
     invasionSERVER.appendSTATS = function(_stats)
         local _msg = ""
-        local _player = _stats.Id
-        _stats.Time = DCS.getRealTime() - _stats.Time
-        if (_stats ~= nil and _stats.Time > 5) then
-            local charS, charC, charE = "   ", ";", "\n"
+        if (_stats ~= nil and _stats.takeoff > 0) then
+            local _player = _stats.Id
+                local charS, charC, charE = "   ", ";", "\n"
             local file, err = io.open(invasionSERVER.fileSTATS, "a")
             if err then
                 return err
             end
+            _stats.Time = DCS.getRealTime() - _stats.Time
             -- UCID, NAME, TIME, MISION, AVION, BLUE, AUTOKILL, DEATH, TAKEOFF, LANDING, EJECTS
             _msg = _msg .. os.date("%y-%m-%d %H:%M:%S") .. charC
             _msg = _msg .. _stats.ucid .. charC
@@ -247,15 +276,7 @@ do
              then
                 -- CARGA STATS
                 local _stats = invasionSERVER.getStats(arg1)
-                --[[                 
-                if (eventName == "disconnect") then
-                    -- DESCONEXION
-                    if (arg2 ~= "") then
-                        invasionSERVER.appendSTATS(_stats)
-                    end
-                else 
-                ]]
-                    if (eventName == "change_slot") then
+                if (eventName == "change_slot") then
                     -- CAMBIA SLOTS
                     if (arg3 == 0 and arg2 ~= "") then
                         net.log("SERVER: Inicia el tiempo unicamente")
@@ -294,29 +315,30 @@ do
     end
 
     invasionSERVER.onPlayerConnect = function(_playerID) -- > true | false, "disconnect reason"
-        local _ucid = net.get_player_info(_playerID, "ucid")
-        net.log("SERVER: Player " .. _ucid .. " conecta")
         local _playerName = net.get_player_info(_playerID, "name")
+        local _ucid = net.get_player_info(_playerID, "ucid")
+        net.log("SERVER: Player " .. _ucid .. " : Id : " .. _playerID .. ": conecta")
         if (invasionSERVER.getUser(_ucid) == false) then
             net.log("SERVER: Player not found : " .. _ucid)
-            local _tbl = {Nombre = _playerName, ucid = _ucid}
+            local _tbl = {Nombre = _playerName, ucid = _ucid, e111 = "false"}
             table.insert(invasionSERVER.e111_users, _tbl)
             invasionSERVER.save()
-            net.log("SERVER: Tabla guardada.")
+            net.log("SERVER: Tabla guardada : " .. _playerName .. " ucid " .. _ucid)
         end
-        invasionSERVER.e111_stats[_ucid] = {}
-        invasionSERVER.e111_stats[_ucid].ucid = _ucid
-        invasionSERVER.e111_stats[_ucid].Nombre = _playerName
-        invasionSERVER.e111_stats[_ucid].Id = _playerID
-        invasionSERVER.e111_stats[_ucid].Time = 0
-        invasionSERVER.e111_stats[_ucid].Mission = DCS.getMissionName()
-        invasionSERVER.e111_stats[_ucid].Blue = 0
-        invasionSERVER.e111_stats[_ucid].SelfKill = 0
-        invasionSERVER.e111_stats[_ucid].Avion = 0
-        invasionSERVER.e111_stats[_ucid].pilotDeath = 0
-        invasionSERVER.e111_stats[_ucid].takeoff = 0
-        invasionSERVER.e111_stats[_ucid].landing = 0
-        invasionSERVER.e111_stats[_ucid].eject = 0
+        local _stats = {}
+        _stats.ucid = _ucid
+        _stats.Nombre = _playerName
+        _stats.Id = _playerID
+        _stats.Time = 0
+        _stats.Mission = DCS.getMissionName()
+        _stats.Blue = 0
+        _stats.SelfKill = 0
+        _stats.Avion = 0
+        _stats.pilotDeath = 0
+        _stats.takeoff = 0
+        _stats.landing = 0
+        _stats.eject = 0
+        table.insert(invasionSERVER.e111_stats, _stats)
     end
 
     --[[     
@@ -324,7 +346,6 @@ do
         net.log("SERVER: Current mission is " .. DCS.getMissionName())
     end 
     ]]
-
     DCS.setUserCallbacks(invasionSERVER)
     net.log("SERVER: Invasion after LOG loader")
 end

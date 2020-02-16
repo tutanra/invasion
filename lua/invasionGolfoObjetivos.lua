@@ -132,7 +132,7 @@ invasion_AG[11] = {
     Completado = "Destruido Fuerza de control, toma de fuerzas aliadas hacía objetivo.\n\nObjetivo dinámico realizado, buen trabajo!!!",
     Realizado = false,
     Dinamico = true,
-    Trigger = "REFOBJ8"
+    Trigger = "REFCONV1"
 }
 invasion_AG[12] = {
     NombreObjetivo = "CONTROL MONTAÑOSO 2",
@@ -143,7 +143,7 @@ invasion_AG[12] = {
     Completado = "Destruido Fuerza de control, toma de fuerzas aliadas hacía objetivo.\n\nObjetivo dinámico realizado, buen trabajo!!!",
     Realizado = false,
     Dinamico = true,
-    Trigger = "REFOBJ8"
+    Trigger = "REFCONV1 #001"
 }
 
 invasion_AG[13] = {
@@ -184,8 +184,10 @@ invasion_AG[16] = {
     TextoObjetivo = "SA13 + AAA",
     Completado = "Destruido Defensa SA13 interior.\n\nObjetivo dinámico realizado, buen trabajo!!!",
     Realizado = false,
-    Dinamico = true
+    Dinamico = true,
+    Trigger = "REFCONV1 #002"
 }
+
 invasion_AG[17] = {
     NombreObjetivo = "VALLE HANGAR",
     Unidades = "RFAPC4",
@@ -193,6 +195,17 @@ invasion_AG[17] = {
     Porcentaje = 100,
     TextoObjetivo = "3 APC + ZU23",
     Completado = "Destruido Defensa interior.\n\nObjetivo dinámico realizado, buen trabajo!!!",
+    Realizado = false,
+    Dinamico = true
+}
+
+invasion_AG[17] = {
+    NombreObjetivo = "APCS EN GRANJA AL LIMAH",
+    Unidades = "DEFENSA AEREA AL LIMAH #004",
+    UnidadesTipo = "grupo",
+    Porcentaje = 100,
+    TextoObjetivo = "4 APC + INFANTERIA + VACAS",
+    Completado = "Destruida Defensa interior.\n\nObjetivo dinámico realizado, buen trabajo!!!",
     Realizado = false,
     Dinamico = true
 }

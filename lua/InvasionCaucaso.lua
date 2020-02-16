@@ -28,10 +28,6 @@ local function MissionHardcore()
     trigger.action.setUserFlag(999, true)
 end
 
-local function Bengala(_unit)
-    trigger.action.signalFlare(Unit.getPoint(_unit), trigger.flareColor.Red, 0)
-end
-
 local function ConvoyBatumi()
     INV_mensaje(1, "Bengala de convoy lanzada, color Rojo.")
     _unit = checkAlive("BATUMI_WIN")
