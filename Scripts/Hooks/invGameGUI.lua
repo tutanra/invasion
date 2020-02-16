@@ -126,8 +126,8 @@ do
                     _msg = _msg .. _kill.arma .. charC
                     _msg = _msg .. _kill.victima .. charC
                     _msg = _msg .. _kill.tipo .. charE                  
-                    remove()
                     file:write(_msg)
+                    remove()
                 end
             end
             if _foundKILL == true then
