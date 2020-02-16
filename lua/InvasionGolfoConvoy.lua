@@ -3,7 +3,7 @@
 _gruposConvoy = "REFOBJ8"
 _statusCNV = 0
 --
-
+--
 function ConvoyGolfo()
     INV_mensaje(1, "Bengala de convoy lanzada, color Rojo.")
     if (checkAliveNumber(_gruposConvoy) > 0) then
@@ -14,6 +14,18 @@ function ConvoyGolfo()
             end
         end
     end
+end
+
+function continueConvoyForce()
+    env.info("CNV: Convoy se mueve.")
+    _statusCNV = _statusCNV + 1
+    continueGroup(_gruposConvoy)
+end
+
+function stopConvoyForce()
+    env.info("CNV: Convoy se para.")
+    _statusCNV = _statusCNV + 1
+    stopGroup(_gruposConvoy)
 end
 
 function convoyOrder()
@@ -30,18 +42,6 @@ function convoyOrder()
      then
         stopConvoyForce()
     end
-end
-
-function continueConvoyForce()
-    env.info("CNV: Convoy se mueve.")
-    _statusCNV = _statusCNV + 1
-    continueGroup(_gruposConvoy)
-end
-
-function stopConvoyForce()
-    env.info("CNV: Convoy se para.")
-    _statusCNV = _statusCNV + 1
-    stopGroup(_gruposConvoy)
 end
 
 function ConvoyStatus()
