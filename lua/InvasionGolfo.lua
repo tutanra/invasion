@@ -67,6 +67,7 @@ function INVASION_RadioMenuSetup()
         nil
     )
     subMenuModos = missionCommands.addSubMenuForCoalition(coalition.side.BLUE, "MODOS EXTRAS->")
+--[[    MOOOSE     
     menuCAPextra =
         missionCommands.addCommandForCoalition(
         coalition.side.BLUE,
@@ -90,7 +91,7 @@ function INVASION_RadioMenuSetup()
             trigger.action.setUserFlag(581, 1)
         end,
         subMenuModos
-    )
+    ) ]]
     menuHardCore =
         missionCommands.addCommandForCoalition(
         coalition.side.BLUE,
@@ -133,5 +134,3 @@ INVASION_RadioMenuSetup()
 
 -- MISION 6 sin hacer
 trigger.action.setUserFlag(10, 0)
--- MOOSE SETTINGS
-_SETTINGS:SetPlayerMenuOff()
