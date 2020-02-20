@@ -121,6 +121,7 @@ function WPrandom(_grupoNombre, _numMAX)
 end
 
 local function getCordenadasVec3(_unidad, _tipo)
+    env.info(_unidad)
     if (_tipo == "grupo") then
         local pos = checkAlive(_unidad)
         return Unit.getPosition(pos).p
