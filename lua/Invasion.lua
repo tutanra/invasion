@@ -147,7 +147,7 @@ local function getCordenadasUnit(_unidad, _tipo)
         local pos = StaticObject.getByName(_unidad)
         lat, lon = coord.LOtoLL(StaticObject.getPosition(pos).p)
     end
-    return (UTILS.tostringLL(lat, lon, 0, true))
+    return (mist.tostringLL(lat, lon, 0, true))
 end
 
 function getUnitFromMission(_unidad)
