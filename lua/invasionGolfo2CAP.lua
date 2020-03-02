@@ -83,7 +83,7 @@ gcicap.initial_spawn_delay = 30
 
 --- Enable/disable borders for the red side.
 -- CAP units only engage if enemy units intrude their airspace
-gcicap.red.borders_enabled = false
+gcicap.red.borders_enabled = true
 
 --- Enable/disable borders for the blue side.
 -- CAP units only engage if enemy units intrude their airspace
@@ -269,7 +269,7 @@ gcicap.blue.limit_resources = false
 --- Amount of groups(!) red has at it's disposal.
 -- In other words how many Groups of airplanes
 -- this side can spawn.
-gcicap.red.supply = 24
+gcicap.red.supply = 60
 
 --- Amount of groups(!) red has at it's disposal.
 -- @see gcicap.red.supply
