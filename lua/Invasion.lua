@@ -253,24 +253,45 @@ function unidadesActivas(_tipo, _objetivo, _squadron)
         _unidadesActivas = checkAliveNumber(_objetivo)
         _unidadesTotales = _group:getInitialSize()
     elseif (_tipo == "unidad") then
-        for j, _unitName in ipairs(_objetivo) do
-            local _unit = Unit.getByName(_unitName)
+        if (type(_objetivo) == "string") then
+            local _unit = Unit.getByName(_objetivo)
+            _unidadesTotales = 1
             if (_unit ~= nil) then
+                
                 if (_unit:getLife() > 1) then
                     _unidadesActivas = _unidadesActivas + 1
                 end
             end
-            _unidadesTotales = _unidadesTotales + 1
+        else
+            for j, _unitName in ipairs(_objetivo) do
+                local _unit = Unit.getByName(_unitName)
+                if (_unit ~= nil) then
+                    if (_unit:getLife() > 1) then
+                        _unidadesActivas = _unidadesActivas + 1
+                    end
+                end
+                _unidadesTotales = _unidadesTotales + 1
+            end
         end
     elseif (_tipo == "estatico") then
-        for j, _unitName in ipairs(_objetivo) do
-            local _unit = StaticObject.getByName(_unitName)
+        if (type(_objetivo) == "string") then
+            local _unit = StaticObject.getByName(_objetivo)
+            _unidadesTotales = 1
             if (_unit ~= nil) then
                 if (_unit:getLife() > 1) then
                     _unidadesActivas = _unidadesActivas + 1
                 end
             end
-            _unidadesTotales = _unidadesTotales + 1
+        else
+            for j, _unitName in ipairs(_objetivo) do
+                local _unit = StaticObject.getByName(_unitName)
+                if (_unit ~= nil) then
+                    if (_unit:getLife() > 1) then
+                        _unidadesActivas = _unidadesActivas + 1
+                    end
+                end
+                _unidadesTotales = _unidadesTotales + 1
+            end
         end
     elseif (_tipo == "cap") then
         _unidadesActivas = _squadron.ResourceCount + totalAirplaneGroup(_objetivo)
@@ -352,7 +373,7 @@ function inicioMenu()
                     INV_mensaje(1, _msg)
                 end,
                 nil
-            )
+        )
         else
             local _unitName = ""
             local _unitTipo = ""
@@ -372,7 +393,7 @@ function inicioMenu()
                 getVec3FromMission(_unitName, _unitTipo),
                 coalition.side.BLUE,
                 true
-            )
+        )
         end
     end
 end
@@ -401,7 +422,7 @@ local function missionCompleteUnit(_tipo, _unidad, _porcentaje, _squadron)
         elseif (_tipo == "unidad") then
             local _unit = Unit.getByName(_unidad)
             if (_unit ~= nil) then
-                if (_unit:getLife() < 1) then
+                if (_unit:getLife() <= 1) then
                     return true
                 else
                     return false
@@ -452,6 +473,7 @@ local function missionComplete(_objetivo)
         for j, _unitName in ipairs(_objetivo.Unidades) do
             if (type(_objetivo.UnidadesTipo) == "string") then
                 _unitTipo = _objetivo.UnidadesTipo
+                env.info("Unidad 1 : ".._unitTipo)
             else
                 _unitTipo = _objetivo.UnidadesTipo[j]
             end
@@ -529,11 +551,7 @@ local function checkMissionComplete(_category)
                             continueGroup(_menu.Trigger)
                         elseif (type(_menu.Trigger) == "function") then
                             _menu.Trigger()
-                        else
-                            env.info("Hay trigger pero no detecta")
                         end
-                    else
-                        env.info("No hay trigger")
                     end
                 end
             end
@@ -565,7 +583,7 @@ function eventHandler:onEvent(_eventDCS)
                 end,
                 {},
                 timer.getTime() + 2
-            )
+        )
         end
     end
     return true
