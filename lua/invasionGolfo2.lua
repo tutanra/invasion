@@ -39,7 +39,8 @@ function INVASION_RadioMenuSetup()
         "** MODO HARDCOCE **",
         subMenuModos,
         function()
---[[             missionCommands.removeItemForCoalition(coalition.side.BLUE, menuHardCore)
+--[[             
+            missionCommands.removeItemForCoalition(coalition.side.BLUE, menuHardCore)
             menuHardCore = nil
             if (menuCAPextra == nil) then
                 missionCommands.removeItemForCoalition(coalition.side.BLUE, subMenuModos)

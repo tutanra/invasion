@@ -215,6 +215,14 @@ function startGroup(_grupoNombre)
     end
 end
 
+function embarcar(_group)
+    for index, _ctld in pairs(ctld) do
+        if (_ctld.Nombre == _group) then
+            env.info("Nombre : " .. _ctld.Nombre .. " Indiec : " .. ctld[index].Nombre)
+        end
+    end
+end
+
 ----------------------------
 --
 --
@@ -395,7 +403,7 @@ function inicioMenu()
                 true
         )
         end
-    end
+    end  
 end
 
 function menuDinamico(_groupID)
@@ -473,7 +481,7 @@ local function missionComplete(_objetivo)
         for j, _unitName in ipairs(_objetivo.Unidades) do
             if (type(_objetivo.UnidadesTipo) == "string") then
                 _unitTipo = _objetivo.UnidadesTipo
-                env.info("Unidad 1 : ".._unitTipo)
+                env.info("Unidad 1 : " .. _unitTipo)
             else
                 _unitTipo = _objetivo.UnidadesTipo[j]
             end
