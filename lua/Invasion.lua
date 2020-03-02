@@ -207,7 +207,6 @@ function Bengala(_unit)
     trigger.action.signalFlare(Unit.getPoint(_unit), trigger.flareColor.Red, 0)
 end
 
--- INICIAR CAP
 function startGroup(_grupoNombre)
     local _group = Group.getByName(_grupoNombre)
     if (_group ~= nil) then
