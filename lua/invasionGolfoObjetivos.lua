@@ -72,7 +72,7 @@ invasion_AG[6] = {
     Realizado = false,
     Dinamico = false
 }
-invasion_AG[06] = {
+invasion_AG[7] = {
     NombreObjetivo = "CASERNA DE MONTAÑA",
     Unidades = "OBJDIN1",
     UnidadesTipo = "estatico",
@@ -83,7 +83,7 @@ invasion_AG[06] = {
     Dinamico = true
 }
 
-invasion_AG[07] = {
+invasion_AG[8] = {
     NombreObjetivo = "FUERZA OCUPACIÓN",
     Unidades = "OBJDIN2",
     UnidadesTipo = "grupo",
@@ -93,7 +93,7 @@ invasion_AG[07] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[08] = {
+invasion_AG[9] = {
     NombreObjetivo = "FUERZA OCUPACIÓN VILLA",
     Unidades = "OBJDIN2 #001",
     UnidadesTipo = "grupo",
@@ -103,7 +103,7 @@ invasion_AG[08] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[09] = {
+invasion_AG[10] = {
     NombreObjetivo = "PUERTO DIBBA AL-HISN",
     Unidades = "OBJDINADIBBA",
     UnidadesTipo = "grupo",
@@ -113,7 +113,7 @@ invasion_AG[09] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[10] = {
+invasion_AG[11] = {
     NombreObjetivo = "PASO MONTAÑOSO",
     Unidades = "OBJDINAM8",
     UnidadesTipo = "grupo",
@@ -123,7 +123,7 @@ invasion_AG[10] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[11] = {
+invasion_AG[12] = {
     NombreObjetivo = "CONTROL MONTAÑOSO",
     Unidades = "OBJDINAM8 #001",
     UnidadesTipo = "grupo",
@@ -134,7 +134,7 @@ invasion_AG[11] = {
     Dinamico = true,
     Trigger = "REFCONV1"
 }
-invasion_AG[12] = {
+invasion_AG[13] = {
     NombreObjetivo = "CONTROL MONTAÑOSO 2",
     Unidades = "RFAPC3",
     UnidadesTipo = "grupo",
@@ -146,7 +146,7 @@ invasion_AG[12] = {
     Trigger = "REFCONV1 #001"
 }
 
-invasion_AG[13] = {
+invasion_AG[14] = {
     NombreObjetivo = "PUESTO DE CARRETERA",
     Unidades = "BlueMASH #009",
     UnidadesTipo = "grupo",
@@ -156,7 +156,7 @@ invasion_AG[13] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[14] = {
+invasion_AG[15] = {
     NombreObjetivo = "AAA EN SAQR PORT",
     Unidades = "DefensaOBJ1Shilka",
     UnidadesTipo = "grupo",
@@ -166,7 +166,7 @@ invasion_AG[14] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[15] = {
+invasion_AG[16] = {
     NombreObjetivo = "DEFENSA AL LIMAH OESTE",
     Unidades = "DEFENSA AEREA AL LIMAH #002",
     UnidadesTipo = "grupo",
@@ -176,7 +176,7 @@ invasion_AG[15] = {
     Realizado = false,
     Dinamico = true
 }
-invasion_AG[16] = {
+invasion_AG[17] = {
     NombreObjetivo = "SA13 VALLE INTERIOR",
     Unidades = "SA13MOUNTAIN",
     UnidadesTipo = "grupo",
@@ -188,7 +188,7 @@ invasion_AG[16] = {
     Trigger = "REFCONV1 #002"
 }
 
-invasion_AG[17] = {
+invasion_AG[18] = {
     NombreObjetivo = "VALLE HANGAR",
     Unidades = "RFAPC4",
     UnidadesTipo = "grupo",
@@ -199,7 +199,7 @@ invasion_AG[17] = {
     Dinamico = true
 }
 
-invasion_AG[17] = {
+invasion_AG[19] = {
     NombreObjetivo = "APCS EN GRANJA AL LIMAH",
     Unidades = "DEFENSA AEREA AL LIMAH #004",
     UnidadesTipo = "grupo",
