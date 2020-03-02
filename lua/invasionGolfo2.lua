@@ -56,8 +56,9 @@ function INVASION_RadioMenuSetup()
         "DESARROLLO",
         subMenuModos,
         function()
-            trigger.action.explosion(StaticObject.getByName("OBJ3_HANGAR1"):getPosition().p, 2000)
-            trigger.action.explosion(StaticObject.getByName("OBJ3_HANGAR2"):getPosition().p, 2000)
+            trigger.action.explosion(StaticObject.getByName("OBJ4_MANDO1"):getPosition().p, 2000)
+            trigger.action.explosion(StaticObject.getByName("OBJ4_RADIO1"):getPosition().p, 2000)
+            trigger.action.explosion(StaticObject.getByName("OBJ4_RADIO2"):getPosition().p, 2000)
         end,
         subMenuModos
     )

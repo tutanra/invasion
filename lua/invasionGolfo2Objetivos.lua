@@ -39,3 +39,14 @@ invasion_AG[3] = {
     Realizado = false,
     Dinamico = false
 }
+invasion_AG[4] = {
+    NombreObjetivo = "SHAHR-E GHADIM",
+    Unidades = {"OBJ4_MANDO1", "OBJ4_RADIO1","OBJ4_RADIO2"},
+    UnidadesTipo = "estatico",
+    Porcentaje = 100,
+    TextoObjetivo = "ELIMINA LAS DOS TORRES DE RADIO Y EL PUESTO DE CONTROL",
+    Completado = "OBJETIVO 4 - RADIOS Y PUESTOS DE CONTROL DESTRUIDOS.\n\nBuen Trabajo !!!",
+    VerEstado = false,
+    Realizado = false,
+    Dinamico = false
+}
