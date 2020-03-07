@@ -3,15 +3,15 @@ invasion_AG[1] = {
     NombreObjetivo = "EVACUACIÓN",
     Unidades = {
         "OBJ1_SHIP",
-        "OBJ1_DEFENSA"
+        {"Unidad #005", "Unidad #006", "Unidad #007"},
     },
-    UnidadesTipo = {"unidad","grupo"},
+    UnidadesTipo = {"unidad","unidad"},
     Porcentaje = 100,
     TextoObjetivo = {
         "- Barco de transporte : ",
         "- Enemigos en zona Puerto : "
     },
-    TextoCumplir = "Elimina el Barco de evacuación y fuerzas enemigas para realizar captura.",
+    TextoCumplir = "Elimina el Barco de evacuación y fuerzas enemigas AAA en Puerto para realizar captura.",
     Completado = "OBJETIVO 1 - EVACUACIÓN Y AAA ELIMINADA.\n\nBuen trabajo !!",
     VerEstado = true,
     Realizado = false,

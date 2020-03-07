@@ -8,38 +8,30 @@
 --
 function INVASION_RadioMenuSetup()
     subMenuModos = missionCommands.addSubMenuForCoalition(coalition.side.BLUE, "MODOS EXTRAS->")
---[[    MOOOSE     
     menuCAPextra =
         missionCommands.addCommandForCoalition(
         coalition.side.BLUE,
         "** MODO EXTRA CAP **",
         subMenuModos,
         function()
-            local Khasab_base = ZONE_AIRBASE:New(AIRBASE.PersianGulf.Khasab, 10000)
-            CAPDispatcher:SetSquadron("Kish_CAP", AIRBASE.PersianGulf.Kish_International_Airport, {"KISH_SU30", "KISH_F14"})
-            CAPDispatcher:SetSquadronTakeoffInAir("Kish_CAP")
-            CAPDispatcher:SetSquadronGci("Kish_CAP", 900, 1200)
-            CAPDispatcher:SetSquadronOverhead("Kish_CAP", 2)
-            CAPDispatcher:SetSquadronTakeoffInAir("Kish_CAP")
-            CAPDispatcher:SetSquadronCap("Qeshm_CAP", Khasab_base, 4000, 8000, 600, 800, 800, 1200, "BARO")
-            CAPDispatcher:SetSquadronCapInterval("Qeshm_CAP", 1, 180, 600, 1)
-            missionCommands.removeItemForCoalition(coalition.side.BLUE, menuCAPextra)
+            gcicap.gci.template_prefix = "__HARDCORE__"
+            gcicap.cap.template_prefix = "__CAP2__"
+            getAllActiveAircrafts("red")
+            garbageCollector("red")
             menuCAPextra = nil
             if (menuHardCore == nil) then
                 missionCommands.removeItemForCoalition(coalition.side.BLUE, subMenuModos)
             end
             INV_mensaje(3, "Se informa que se ha detectado mayor presencia de Aviones enemigos en zona hostil.\n\nModo Hardcore A/A activado.")
-            trigger.action.setUserFlag(581, 1)
         end,
         subMenuModos
-    ) ]]
-    menuHardCore =
+    )
+--[[     menuHardCore =
         missionCommands.addCommandForCoalition(
         coalition.side.BLUE,
-        "** MODO HARDCOCE **",
+        "** MODO HARDCORE A/T **",
         subMenuModos,
-        function()
---[[             
+        function()           
             missionCommands.removeItemForCoalition(coalition.side.BLUE, menuHardCore)
             menuHardCore = nil
             if (menuCAPextra == nil) then
@@ -48,7 +40,7 @@ function INVASION_RadioMenuSetup()
             INV_mensaje(3, "Se informa de mayor presencia AntiAérea terrestre cercanos a los objetivos.\n\nModo Hardcore A/G activado.")
             Group.getByName("OBJ1_REFUERZO_HARDCORE"):activate()
             Group.getByName("OBJ5_SEAD_MV #003"):activate()
-            trigger.action.setUserFlag(8001, 1) ]]
+            trigger.action.setUserFlag(8001, 1) 
         end,
         subMenuModos
     )
@@ -57,12 +49,12 @@ function INVASION_RadioMenuSetup()
         "DESARROLLO",
         subMenuModos,
         function()
-            trigger.action.explosion(StaticObject.getByName("OBJ4_MANDO1"):getPosition().p, 2000)
-            trigger.action.explosion(StaticObject.getByName("OBJ4_RADIO1"):getPosition().p, 2000)
-            trigger.action.explosion(StaticObject.getByName("OBJ4_RADIO2"):getPosition().p, 2000)
+            trigger.action.explosion(Unit.getByName("Unidad #006"):getPosition().p, 2000)
+            trigger.action.explosion(Unit.getByName("Unidad #005"):getPosition().p, 2000)
+            trigger.action.explosion(Unit.getByName("Unidad #007"):getPosition().p, 2000)
         end,
         subMenuModos
-    )
+    ) ]]
 end
 
 inicioMenu()
