@@ -15,15 +15,17 @@ GolfoDispatcher:SetSquadron("QESHM_PATROL", AIRBASE.PersianGulf.Bandar_Abbas_Int
 -- GolfoDispatcher:SetSquadronOverhead("CAP_Patrol_Shiraz" ,2)
 -- GolfoDispatcher:SetSquadronOverhead("QESHM_PATROL" ,2)
 
-GolfoDispatcher:SetSquadronCap("CAP_Patrol_Shiraz", ZONE_AIRBASE:New(AIRBASE.PersianGulf.Lar_Airbase, 10000), 4000, 8000, 600, 800, 800, 1200, "BARO")
+local CAPpatrolLar= ZONE:New( "CAPpatrol2")
+GolfoDispatcher:SetSquadronCap("CAP_Patrol_Shiraz", CAPpatrolLar, 4000, 8000, 600, 800, 800, 1200, "BARO")
 GolfoDispatcher:SetSquadronCapInterval("CAP_Patrol_Shiraz", 1, 180, 600)
 GolfoDispatcher:SetSquadronGci("CAP_Patrol_Shiraz", 900, 2100)
 
-GolfoDispatcher:SetSquadronCap("QESHM_PATROL", ZONE_POLYGON:New( "CAP Zone East", GROUP:FindByName( "CAPIRANPATROL" ) ), 4000, 8000, 600, 800, 800, 1200, "BARO")
+local CAPpatrolQeshm = ZONE:New( "CAPpatrol1")
+GolfoDispatcher:SetSquadronCap("QESHM_PATROL", CAPpatrolQeshm, 4000, 8000, 600, 800, 800, 1200, "BARO")
 GolfoDispatcher:SetSquadronCapInterval("QESHM_PATROL", 1, 180, 600)
 
-GolfoDispatcher:SetEngageRadius(200000)
+GolfoDispatcher:SetEngageRadius(150000)
 GolfoDispatcher:SetGciRadius( 250000 )
 GolfoDispatcher:SetDefaultGrouping(2)
-GolfoDispatcher:SetDefaultTakeoffFromParkingHot()
-GolfoDispatcher:SetTacticalDisplay(true)
+GolfoDispatcher:SetDefaultTakeoffFromParkingCold()
+-- GolfoDispatcher:SetTacticalDisplay(true)
