@@ -14,10 +14,8 @@ function INVASION_RadioMenuSetup()
         "** MODO EXTRA CAP **",
         subMenuModos,
         function()
-            gcicap.gci.template_prefix = "__HARDCORE__"
-            gcicap.cap.template_prefix = "__CAP2__"
-            getAllActiveAircrafts("red")
-            garbageCollector("red")
+            GolfoDispatcher:SetSquadron("CAP_Patrol_Shiraz", AIRBASE.PersianGulf.Lar_Airbase, "ABUMUSA_HD2" )
+            GolfoDispatcher:SetSquadron("QESHM_PATROL", AIRBASE.PersianGulf.Bandar_Abbas_Intl, "ABUMUSA_HD1" )
             menuCAPextra = nil
             if (menuHardCore == nil) then
                 missionCommands.removeItemForCoalition(coalition.side.BLUE, subMenuModos)

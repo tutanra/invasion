@@ -1,7 +1,7 @@
 -- OBJETIVOS --
 invasion_AG[1] = {
     NombreObjetivo = "BASE SAQR PORT",
-    Unidades = "DEFENSA_IRAN_SAQR_PORT",
+    Unidades = {"OBJ1_1","OBJ1_2","OBJ1_3"},
     UnidadesTipo = "grupo", -- "grupo, unidad, estatico"
     Porcentaje = 100, -- porcentaje de unidad destruido
     TextoObjetivo = "UNIDADES RESTANTES : ",
